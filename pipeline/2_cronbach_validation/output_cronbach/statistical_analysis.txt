@@ -1,52 +1,46 @@
-STATISTICAL ANALYSIS
-================================================================================
-So dong duoc dung de phan tich: 855
+PHÂN TÍCH THỐNG KÊ
 
-Nhom bien A
-----------------------------------------
-Bien quan sat: A1, A2, A3
+Nhóm biến A
+Biến quan sát: A1, A2, A3
 Cronbach's alpha: 0.705628
-Dien giai: Chấp nhận được
-Du do tin cay de do luong bien tiem an A: Yes
+Diễn giải: Chấp nhận được
+Đủ độ tin cậy để đo lường biến tiềm ẩn A: Có
 
-  A1: Corrected item-total correlation = 0.653735, Alpha if item deleted = 0.528654, Recommendation = Keep
-  A2: Corrected item-total correlation = 0.727779, Alpha if item deleted = 0.33061, Recommendation = Keep
-  A3: Corrected item-total correlation = 0.495461, Alpha if item deleted = 0.786249, Recommendation = Keep
+  A1: Tương quan biến-tổng hiệu chỉnh = 0.653735, Alpha nếu loại biến = 0.528654, Khuyến nghị = Giữ lại
+  A2: Tương quan biến-tổng hiệu chỉnh = 0.727779, Alpha nếu loại biến = 0.33061, Khuyến nghị = Giữ lại
+  A3: Tương quan biến-tổng hiệu chỉnh = 0.495461, Alpha nếu loại biến = 0.786249, Khuyến nghị = Giữ lại
 
-Nhom bien B
-----------------------------------------
-Bien quan sat: B1, B2, B3
+Nhóm biến B
+Biến quan sát: B1, B2, B3
 Cronbach's alpha: 0.003876
-Dien giai: Không đạt độ tin cậy
-Du do tin cay de do luong bien tiem an B: No
+Diễn giải: Không đạt độ tin cậy
+Đủ độ tin cậy để đo lường biến tiềm ẩn B: Không
 
-  B1: Corrected item-total correlation = 0.219286, Alpha if item deleted = 0.004075, Recommendation = Consider removing
-  B2: Corrected item-total correlation = 0.142959, Alpha if item deleted = 0.001064, Recommendation = Consider removing
-  B3: Corrected item-total correlation = 0.154129, Alpha if item deleted = 0.469884, Recommendation = Consider removing
+  B1: Tương quan biến-tổng hiệu chỉnh = 0.219286, Alpha nếu loại biến = 0.004075, Khuyến nghị = Cân nhắc loại bỏ
+  B2: Tương quan biến-tổng hiệu chỉnh = 0.142959, Alpha nếu loại biến = 0.001064, Khuyến nghị = Cân nhắc loại bỏ
+  B3: Tương quan biến-tổng hiệu chỉnh = 0.154129, Alpha nếu loại biến = 0.469884, Khuyến nghị = Cân nhắc loại bỏ
 
-Nhom bien C
-----------------------------------------
-Bien quan sat: C1, C2, C3
+Nhóm biến C
+Biến quan sát: C1, C2, C3
 Cronbach's alpha: -0.013788
-Dien giai: Không đạt độ tin cậy
-Du do tin cay de do luong bien tiem an C: No
+Diễn giải: Không đạt độ tin cậy
+Đủ độ tin cậy để đo lường biến tiềm ẩn C: Không
 
-  C1: Corrected item-total correlation = -0.103049, Alpha if item deleted = -0.010658, Recommendation = Consider removing
-  C2: Corrected item-total correlation = -0.018514, Alpha if item deleted = -0.039552, Recommendation = Consider removing
-  C3: Corrected item-total correlation = -0.014308, Alpha if item deleted = -0.00594, Recommendation = Consider removing
+  C1: Tương quan biến-tổng hiệu chỉnh = -0.103049, Alpha nếu loại biến = -0.010658, Khuyến nghị = Cân nhắc loại bỏ
+  C2: Tương quan biến-tổng hiệu chỉnh = -0.018514, Alpha nếu loại biến = -0.039552, Khuyến nghị = Cân nhắc loại bỏ
+  C3: Tương quan biến-tổng hiệu chỉnh = -0.014308, Alpha nếu loại biến = -0.00594, Khuyến nghị = Cân nhắc loại bỏ
 
-Nhom bien D
-----------------------------------------
-Bien quan sat: D1, D2, D3
-Cronbach's alpha: -3e-05
-Dien giai: Không đạt độ tin cậy
-Du do tin cay de do luong bien tiem an D: No
+Nhóm biến D
+Biến quan sát: D1, D2, D3
+Cronbach's alpha: -0.00003
+Diễn giải: Không đạt độ tin cậy
+Đủ độ tin cậy để đo lường biến tiềm ẩn D: Không
 
-  D1: Corrected item-total correlation = -0.003514, Alpha if item deleted = 0.990291, Recommendation = Consider removing
-  D2: Corrected item-total correlation = 0.00271, Alpha if item deleted = -9.9e-05, Recommendation = Consider removing
-  D3: Corrected item-total correlation = 0.00028, Alpha if item deleted = -4.5e-05, Recommendation = Consider removing
+  D1: Tương quan biến-tổng hiệu chỉnh = -0.003514, Alpha nếu loại biến = 0.990291, Khuyến nghị = Cân nhắc loại bỏ
+  D2: Tương quan biến-tổng hiệu chỉnh = 0.00271, Alpha nếu loại biến = -0.000099, Khuyến nghị = Cân nhắc loại bỏ
+  D3: Tương quan biến-tổng hiệu chỉnh = 0.00028, Alpha nếu loại biến = -0.000045, Khuyến nghị = Cân nhắc loại bỏ
 
-Guideline for interpretation:
-- Cronbach's alpha >= 0.7: thang do duoc xem la co do tin cay chap nhan duoc.
-- Corrected item-total correlation >= 0.3: bien quan sat thuong duoc xem la phu hop.
-- Neu alpha_if_item_deleted lon hon alpha hien tai mot cach dang ke, co the xem xet loai bien do.
+Hướng dẫn diễn giải:
+- Cronbach's alpha >= 0.7: thang đo được xem là có độ tin cậy chấp nhận được.
+- Corrected item-total correlation >= 0.3: biến quan sát thường được xem là phù hợp.
+- Nếu alpha_if_item_deleted lớn hơn alpha hiện tại một cách đáng kể, có thể cân nhắc loại bỏ biến đó.
