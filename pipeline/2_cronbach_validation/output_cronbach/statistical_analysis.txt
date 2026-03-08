@@ -1,0 +1,52 @@
+STATISTICAL ANALYSIS
+================================================================================
+So dong duoc dung de phan tich: 855
+
+Nhom bien A
+----------------------------------------
+Bien quan sat: A1, A2, A3
+Cronbach's alpha: 0.705628
+Dien giai: Chấp nhận được
+Du do tin cay de do luong bien tiem an A: Yes
+
+  A1: Corrected item-total correlation = 0.653735, Alpha if item deleted = 0.528654, Recommendation = Keep
+  A2: Corrected item-total correlation = 0.727779, Alpha if item deleted = 0.33061, Recommendation = Keep
+  A3: Corrected item-total correlation = 0.495461, Alpha if item deleted = 0.786249, Recommendation = Keep
+
+Nhom bien B
+----------------------------------------
+Bien quan sat: B1, B2, B3
+Cronbach's alpha: 0.003876
+Dien giai: Không đạt độ tin cậy
+Du do tin cay de do luong bien tiem an B: No
+
+  B1: Corrected item-total correlation = 0.219286, Alpha if item deleted = 0.004075, Recommendation = Consider removing
+  B2: Corrected item-total correlation = 0.142959, Alpha if item deleted = 0.001064, Recommendation = Consider removing
+  B3: Corrected item-total correlation = 0.154129, Alpha if item deleted = 0.469884, Recommendation = Consider removing
+
+Nhom bien C
+----------------------------------------
+Bien quan sat: C1, C2, C3
+Cronbach's alpha: -0.013788
+Dien giai: Không đạt độ tin cậy
+Du do tin cay de do luong bien tiem an C: No
+
+  C1: Corrected item-total correlation = -0.103049, Alpha if item deleted = -0.010658, Recommendation = Consider removing
+  C2: Corrected item-total correlation = -0.018514, Alpha if item deleted = -0.039552, Recommendation = Consider removing
+  C3: Corrected item-total correlation = -0.014308, Alpha if item deleted = -0.00594, Recommendation = Consider removing
+
+Nhom bien D
+----------------------------------------
+Bien quan sat: D1, D2, D3
+Cronbach's alpha: -3e-05
+Dien giai: Không đạt độ tin cậy
+Du do tin cay de do luong bien tiem an D: No
+
+  D1: Corrected item-total correlation = -0.003514, Alpha if item deleted = 0.990291, Recommendation = Consider removing
+  D2: Corrected item-total correlation = 0.00271, Alpha if item deleted = -9.9e-05, Recommendation = Consider removing
+  D3: Corrected item-total correlation = 0.00028, Alpha if item deleted = -4.5e-05, Recommendation = Consider removing
+
+Guideline for interpretation:
+- Cronbach's alpha >= 0.7: thang do duoc xem la co do tin cay chap nhan duoc.
+- Corrected item-total correlation >= 0.3: bien quan sat thuong duoc xem la phu hop.
+- Neu alpha_if_item_deleted lon hon alpha hien tai mot cach dang ke, co the xem xet loai bien do.

@@ -1,0 +1,5 @@
+﻿latent_variable,observed_variables,n_items,n_samples,cronbach_alpha,interpretation,reliable_for_measurement
+A,"A1, A2, A3",3,855,0.705628,Chấp nhận được,Yes
+B,"B1, B2, B3",3,855,0.003876,Không đạt độ tin cậy,No
+C,"C1, C2, C3",3,855,-0.013788,Không đạt độ tin cậy,No
+D,"D1, D2, D3",3,855,-3e-05,Không đạt độ tin cậy,No

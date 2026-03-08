@@ -1,0 +1,13 @@
+﻿latent_variable,item,corrected_item_total_correlation,alpha_if_item_deleted,item_status
+A,A1,0.653735,0.528654,Keep
+A,A2,0.727779,0.33061,Keep
+A,A3,0.495461,0.786249,Keep
+B,B1,0.219286,0.004075,Consider removing
+B,B2,0.142959,0.001064,Consider removing
+B,B3,0.154129,0.469884,Consider removing
+C,C1,-0.103049,-0.010658,Consider removing
+C,C2,-0.018514,-0.039552,Consider removing
+C,C3,-0.014308,-0.00594,Consider removing
+D,D1,-0.003514,0.990291,Consider removing
+D,D2,0.00271,-9.9e-05,Consider removing
+D,D3,0.00028,-4.5e-05,Consider removing
