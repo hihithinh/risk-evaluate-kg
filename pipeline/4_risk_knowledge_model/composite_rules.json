@@ -1,0 +1,303 @@
+[
+  {
+    "rule_id": "R1",
+    "description": "High leverage and low profitability",
+    "conditions": [
+      {
+        "indicator": "B1",
+        "operator": "gt",
+        "value": 0.7
+      },
+      {
+        "indicator": "D3",
+        "operator": "lt",
+        "value": 0.05
+      }
+    ],
+    "result": {
+      "risk_type": "financial_distress",
+      "severity": "high",
+      "risk_point": 3,
+      "explanation": "Tỷ lệ nợ cao kết hợp với khả năng sinh lợi thấp cho thấy doanh nghiệp có nguy cơ gặp khó khăn tài chính nghiêm trọng."
+    }
+  },
+  {
+    "rule_id": "R2",
+    "description": "Poor liquidity and high leverage",
+    "conditions": [
+      {
+        "indicator": "A1",
+        "operator": "lt",
+        "value": 1.0
+      },
+      {
+        "indicator": "B1",
+        "operator": "gt",
+        "value": 0.7
+      }
+    ],
+    "result": {
+      "risk_type": "solvency_risk",
+      "severity": "high",
+      "risk_point": 3,
+      "explanation": "Khả năng thanh khoản kém kết hợp với tỷ lệ nợ cao cho thấy doanh nghiệp có nguy cơ mất khả năng thanh toán."
+    }
+  },
+  {
+    "rule_id": "R3",
+    "description": "Low cash and high debt to equity",
+    "conditions": [
+      {
+        "indicator": "A3",
+        "operator": "lt",
+        "value": 0.2
+      },
+      {
+        "indicator": "B2",
+        "operator": "gt",
+        "value": 2.0
+      }
+    ],
+    "result": {
+      "risk_type": "liquidity_crisis",
+      "severity": "high",
+      "risk_point": 3,
+      "explanation": "Tiền mặt thấp kết hợp với tỷ lệ nợ trên vốn chủ sở hữu cao cho thấy doanh nghiệp có nguy cơ khủng hoảng thanh khoản."
+    }
+  },
+  {
+    "rule_id": "R4",
+    "description": "Poor interest coverage and high leverage",
+    "conditions": [
+      {
+        "indicator": "B3",
+        "operator": "lt",
+        "value": 1.5
+      },
+      {
+        "indicator": "B1",
+        "operator": "gt",
+        "value": 0.5
+      }
+    ],
+    "result": {
+      "risk_type": "debt_servicing_risk",
+      "severity": "high",
+      "risk_point": 3,
+      "explanation": "Khả năng trả lãi vay kém kết hợp với tỷ lệ nợ cao cho thấy doanh nghiệp gặp khó khăn trong việc phục vụ nợ."
+    }
+  },
+  {
+    "rule_id": "R5",
+    "description": "Low efficiency and low profitability",
+    "conditions": [
+      {
+        "indicator": "C1",
+        "operator": "lt",
+        "value": 3.0
+      },
+      {
+        "indicator": "D1",
+        "operator": "lt",
+        "value": 0.05
+      }
+    ],
+    "result": {
+      "risk_type": "operational_inefficiency",
+      "severity": "medium",
+      "risk_point": 2,
+      "explanation": "Hiệu quả hoạt động thấp kết hợp với tỷ suất lợi nhuận kém cho thấy doanh nghiệp cần cải thiện quy trình vận hành."
+    }
+  },
+  {
+    "rule_id": "R6",
+    "description": "High receivables and low cash",
+    "conditions": [
+      {
+        "indicator": "C2",
+        "operator": "gt",
+        "value": 0.25
+      },
+      {
+        "indicator": "A3",
+        "operator": "lt",
+        "value": 0.2
+      }
+    ],
+    "result": {
+      "risk_type": "working_capital_risk",
+      "severity": "medium",
+      "risk_point": 2,
+      "explanation": "Khoản phải thu cao kết hợp với tiền mặt thấp cho thấy doanh nghiệp gặp vấn đề về vốn lưu động."
+    }
+  },
+  {
+    "rule_id": "R7",
+    "description": "Low asset turnover and low profitability",
+    "conditions": [
+      {
+        "indicator": "C3",
+        "operator": "lt",
+        "value": 1.0
+      },
+      {
+        "indicator": "D2",
+        "operator": "lt",
+        "value": 0.08
+      }
+    ],
+    "result": {
+      "risk_type": "asset_utilization_risk",
+      "severity": "medium",
+      "risk_point": 2,
+      "explanation": "Tài sản cố định không được tận dụng hiệu quả kết hợp với khả năng sinh lợi thấp cho thấy doanh nghiệp cần tối ưu hóa sử dụng tài sản."
+    }
+  },
+  {
+    "rule_id": "R8",
+    "description": "All liquidity indicators are poor",
+    "conditions": [
+      {
+        "indicator": "A1",
+        "operator": "lt",
+        "value": 1.0
+      },
+      {
+        "indicator": "A2",
+        "operator": "lt",
+        "value": 0.8
+      },
+      {
+        "indicator": "A3",
+        "operator": "lt",
+        "value": 0.2
+      }
+    ],
+    "result": {
+      "risk_type": "severe_liquidity_risk",
+      "severity": "high",
+      "risk_point": 4,
+      "explanation": "Tất cả các chỉ số thanh khoản đều ở mức thấp cho thấy doanh nghiệp đang đối mặt với rủi ro thanh khoản nghiêm trọng."
+    }
+  },
+  {
+    "rule_id": "R9",
+    "description": "All profitability indicators are poor",
+    "conditions": [
+      {
+        "indicator": "D1",
+        "operator": "lt",
+        "value": 0.05
+      },
+      {
+        "indicator": "D2",
+        "operator": "lt",
+        "value": 0.08
+      },
+      {
+        "indicator": "D3",
+        "operator": "lt",
+        "value": 0.05
+      }
+    ],
+    "result": {
+      "risk_type": "severe_profitability_risk",
+      "severity": "high",
+      "risk_point": 4,
+      "explanation": "Tất cả các chỉ số sinh lợi đều ở mức thấp cho thấy doanh nghiệp đang gặp khó khăn nghiêm trọng về khả năng tạo lợi nhuận."
+    }
+  },
+  {
+    "rule_id": "R10",
+    "description": "Good liquidity but poor profitability",
+    "conditions": [
+      {
+        "indicator": "A1",
+        "operator": "gte",
+        "value": 2.0
+      },
+      {
+        "indicator": "D3",
+        "operator": "lt",
+        "value": 0.05
+      }
+    ],
+    "result": {
+      "risk_type": "profitability_concern",
+      "severity": "medium",
+      "risk_point": 2,
+      "explanation": "Mặc dù có thanh khoản tốt nhưng khả năng sinh lợi kém cho thấy doanh nghiệp cần cải thiện hiệu quả kinh doanh."
+    }
+  },
+  {
+    "rule_id": "R11",
+    "description": "Moderate leverage with good profitability",
+    "conditions": [
+      {
+        "indicator": "B1",
+        "operator": "gte",
+        "value": 0.5
+      },
+      {
+        "indicator": "B1",
+        "operator": "lt",
+        "value": 0.7
+      },
+      {
+        "indicator": "D3",
+        "operator": "gte",
+        "value": 0.08
+      }
+    ],
+    "result": {
+      "risk_type": "balanced_leverage",
+      "severity": "low",
+      "risk_point": -1,
+      "explanation": "Tỷ lệ nợ ở mức trung bình kết hợp với khả năng sinh lợi tốt cho thấy doanh nghiệp đang sử dụng đòn bẩy tài chính hợp lý."
+    }
+  },
+  {
+    "rule_id": "R12",
+    "description": "Low inventory turnover and high receivables",
+    "conditions": [
+      {
+        "indicator": "C1",
+        "operator": "lt",
+        "value": 3.0
+      },
+      {
+        "indicator": "C2",
+        "operator": "gt",
+        "value": 0.25
+      }
+    ],
+    "result": {
+      "risk_type": "working_capital_inefficiency",
+      "severity": "medium",
+      "risk_point": 2,
+      "explanation": "Hàng tồn kho quay vòng chậm kết hợp với khoản phải thu cao cho thấy doanh nghiệp quản lý vốn lưu động kém hiệu quả."
+    }
+  },
+  {
+    "rule_id": "R13",
+    "description": "Liquidity risk combined with leverage risk",
+    "conditions": [
+      {
+        "indicator": "A1",
+        "operator": "lt",
+        "value": 1.0
+      },
+      {
+        "indicator": "B1",
+        "operator": "gt",
+        "value": 0.7
+      }
+    ],
+    "result": {
+      "risk_type": "financial_distress",
+      "severity": "high",
+      "risk_point": 3,
+      "explanation": "Thanh khoản yếu kết hợp với đòn bẩy tài chính cao cho thấy doanh nghiệp có nguy cơ gặp khó khăn tài chính."
+    }
+  }
+]

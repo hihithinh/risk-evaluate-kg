@@ -1,0 +1,15 @@
+name: risk-evaluate-kg
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pandas
+  - numpy
+  - openpyxl
+  - jupyter
+  - notebook
+  - nbconvert
+  - pip:
+    - vnstock3
