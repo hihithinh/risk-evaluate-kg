@@ -5,13 +5,17 @@
     "conditions": [
       {
         "indicator": "B1",
-        "operator": "gt",
-        "value": 0.7
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "D3",
-        "operator": "lt",
-        "value": 0.05
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -27,13 +31,17 @@
     "conditions": [
       {
         "indicator": "A1",
-        "operator": "lt",
-        "value": 1.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "B1",
-        "operator": "gt",
-        "value": 0.7
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -49,13 +57,17 @@
     "conditions": [
       {
         "indicator": "A3",
-        "operator": "lt",
-        "value": 0.2
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "B2",
-        "operator": "gt",
-        "value": 2.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -71,13 +83,17 @@
     "conditions": [
       {
         "indicator": "B3",
-        "operator": "lt",
-        "value": 1.5
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "in",
+        "value": ["Medium", "High"]
       },
       {
         "indicator": "B1",
-        "operator": "gt",
-        "value": 0.5
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "in",
+        "value": ["Medium", "High"]
       }
     ],
     "result": {
@@ -93,13 +109,17 @@
     "conditions": [
       {
         "indicator": "C1",
-        "operator": "lt",
-        "value": 3.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "D1",
-        "operator": "lt",
-        "value": 0.05
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -115,13 +135,17 @@
     "conditions": [
       {
         "indicator": "C2",
-        "operator": "gt",
-        "value": 0.25
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "A3",
-        "operator": "lt",
-        "value": 0.2
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -137,13 +161,17 @@
     "conditions": [
       {
         "indicator": "C3",
-        "operator": "lt",
-        "value": 1.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "D2",
-        "operator": "lt",
-        "value": 0.08
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -159,18 +187,24 @@
     "conditions": [
       {
         "indicator": "A1",
-        "operator": "lt",
-        "value": 1.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "A2",
-        "operator": "lt",
-        "value": 0.8
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "A3",
-        "operator": "lt",
-        "value": 0.2
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -186,18 +220,24 @@
     "conditions": [
       {
         "indicator": "D1",
-        "operator": "lt",
-        "value": 0.05
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "D2",
-        "operator": "lt",
-        "value": 0.08
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "D3",
-        "operator": "lt",
-        "value": 0.05
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -213,13 +253,17 @@
     "conditions": [
       {
         "indicator": "A1",
-        "operator": "gte",
-        "value": 2.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "Good"
       },
       {
         "indicator": "D3",
-        "operator": "lt",
-        "value": 0.05
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -235,18 +279,17 @@
     "conditions": [
       {
         "indicator": "B1",
-        "operator": "gte",
-        "value": 0.5
-      },
-      {
-        "indicator": "B1",
-        "operator": "lt",
-        "value": 0.7
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "Medium"
       },
       {
         "indicator": "D3",
-        "operator": "gte",
-        "value": 0.08
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "Good"
       }
     ],
     "result": {
@@ -262,13 +305,17 @@
     "conditions": [
       {
         "indicator": "C1",
-        "operator": "lt",
-        "value": 3.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "C2",
-        "operator": "gt",
-        "value": 0.25
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {
@@ -284,13 +331,17 @@
     "conditions": [
       {
         "indicator": "A1",
-        "operator": "lt",
-        "value": 1.0
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       },
       {
         "indicator": "B1",
-        "operator": "gt",
-        "value": 0.7
+        "source": "indicator_rules_output",
+        "field": "risk_level",
+        "operator": "eq",
+        "value": "High"
       }
     ],
     "result": {

@@ -1,0 +1,28 @@
+{
+  "description": "Schema mapping cho Phase 1: Data Standardization",
+  "version": "1.0",
+  "report_types": ["income_statement", "balance_sheet", "cash_flow"],
+  "merge_keys": ["ticker", "yearReport", "lengthReport"],
+  "validation_fields": {
+    "current_assets": "CURRENT ASSETS (Bn. VND)",
+    "total_assets": "TOTAL ASSETS (Bn. VND)",
+    "fixed_assets": "Fixed assets (Bn. VND)",
+    "current_liabilities": "Current liabilities (Bn. VND)",
+    "total_liabilities": "LIABILITIES (Bn. VND)",
+    "owners_equity": "OWNER'S EQUITY(Bn.VND)"
+  },
+  "validation_rules": [
+    {
+      "rule": "non_negative_assets",
+      "fields": ["current_assets", "total_assets", "fixed_assets"]
+    },
+    {
+      "rule": "non_negative_liabilities",
+      "fields": ["current_liabilities", "total_liabilities"]
+    },
+    {
+      "rule": "balance_equation",
+      "tolerance": 0.01
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "calculation_rules": [
+    {
+      "indicator": "A1",
+      "calculation": {
+        "numerator": {
+          "field": "CURRENT ASSETS (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "A2",
+      "calculation": {
+        "numerator": {
+          "operation": "subtract",
+          "operands": [
+            {
+              "field": "CURRENT ASSETS (Bn. VND)"
+            },
+            {
+              "field": "Inventories, Net (Bn. VND)"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "A3",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "B1",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "B2",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "B3",
+      "calculation": {
+        "numerator": {
+          "operation": "add",
+          "operands": [
+            {
+              "field": "Profit before tax"
+            },
+            {
+              "field": "Interest Expenses",
+              "transform": "abs"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "Interest Expenses"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C1",
+      "calculation": {
+        "numerator": {
+          "field": "Cost of Sales",
+          "transform": "abs"
+        },
+        "denominator": {
+          "field": "Inventories, Net (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C2",
+      "calculation": {
+        "numerator": {
+          "field": "Accounts receivable (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Net Sales"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C3",
+      "calculation": {
+        "numerator": {
+          "field": "Net Sales"
+        },
+        "denominator": {
+          "field": "Fixed assets (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D1",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "Net Sales"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D2",
+      "calculation": {
+        "numerator": {
+          "operation": "add",
+          "operands": [
+            {
+              "field": "Profit before tax"
+            },
+            {
+              "field": "Interest Expenses",
+              "transform": "abs"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D3",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    }
+  ]
+}

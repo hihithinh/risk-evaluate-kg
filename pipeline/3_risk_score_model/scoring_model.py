@@ -115,55 +115,54 @@ class ScoringModel:
             'explanation': 'Giá trị nằm ngoài các ngưỡng đã định nghĩa.'
         }
     
-    def check_composite_rule(self, rule: Dict, indicator_values: Dict) -> bool:
+    def check_composite_rule(self, rule: Dict, indicator_evaluations: Dict) -> bool:
         """
         Kiểm tra xem một composite rule có được kích hoạt không
         
         Args:
             rule: Composite rule cần kiểm tra
-            indicator_values: Dict chứa giá trị các chỉ số {indicator_code: value}
+            indicator_evaluations: Dict chứa kết quả đánh giá {indicator_code: evaluation_result}
             
         Returns:
             True nếu rule được kích hoạt, False nếu không
         """
         for condition in rule['conditions']:
             indicator = condition['indicator']
-            operator = condition['operator']
-            threshold = condition['value']
             
-            value = indicator_values.get(indicator)
+            eval_result = indicator_evaluations.get(indicator)
             
-            # Nếu không có giá trị, rule không được kích hoạt
-            if value is None or pd.isna(value):
+            if eval_result is None:
                 return False
             
-            # Kiểm tra điều kiện
-            if operator == 'gt':
-                if not (value > threshold):
-                    return False
-            elif operator == 'gte':
-                if not (value >= threshold):
-                    return False
-            elif operator == 'lt':
-                if not (value < threshold):
-                    return False
-            elif operator == 'lte':
-                if not (value <= threshold):
-                    return False
-            elif operator == 'eq':
-                if not (value == threshold):
+            if condition.get('source') == 'indicator_rules_output':
+                field = condition.get('field', 'risk_level')
+                operator = condition['operator']
+                expected_value = condition['value']
+                
+                actual_value = eval_result.get(field)
+                
+                if operator == 'eq':
+                    if actual_value != expected_value:
+                        return False
+                elif operator == 'in':
+                    if actual_value not in expected_value:
+                        return False
+                elif operator == 'ne':
+                    if actual_value == expected_value:
+                        return False
+                else:
                     return False
             else:
                 return False
         
         return True
     
-    def evaluate_composite_rules(self, indicator_values: Dict) -> List[Dict]:
+    def evaluate_composite_rules(self, indicator_evaluations: Dict) -> List[Dict]:
         """
         Đánh giá tất cả composite rules
         
         Args:
-            indicator_values: Dict chứa giá trị các chỉ số {indicator_code: value}
+            indicator_evaluations: Dict chứa kết quả đánh giá {indicator_code: evaluation_result}
             
         Returns:
             List các composite rules được kích hoạt
@@ -171,13 +170,13 @@ class ScoringModel:
         activated_rules = []
         
         for rule in self.composite_rules:
-            if self.check_composite_rule(rule, indicator_values):
+            if self.check_composite_rule(rule, indicator_evaluations):
                 activated_rules.append({
                     'rule_id': rule['rule_id'],
                     'description': rule['description'],
                     'risk_type': rule['result']['risk_type'],
                     'severity': rule['result']['severity'],
-                    'risk_point': rule['result']['risk_point'],  # Đọc từ JSON
+                    'risk_point': rule['result']['risk_point'],
                     'explanation': rule['result']['explanation']
                 })
         
@@ -257,12 +256,14 @@ class ScoringModel:
         
         # Đánh giá từng chỉ số
         indicator_results = []
+        indicator_evaluations = {}
         for ind in indicators:
             result = self.evaluate_indicator(ind, indicator_values[ind])
             indicator_results.append(result)
+            indicator_evaluations[ind] = result
         
         # Đánh giá composite rules
-        composite_results = self.evaluate_composite_rules(indicator_values)
+        composite_results = self.evaluate_composite_rules(indicator_evaluations)
         
         # Tính risk score
         risk_score, risk_label = self.calculate_risk_score(
@@ -394,8 +395,8 @@ def main():
     
     # Initialize scoring model
     print("\n2. Initializing scoring model...")
-    indicator_rules_path = os.path.join(project_root, 'pipeline', '4_risk_knowledge_model', 'indicator_rules.json')
-    composite_rules_path = os.path.join(project_root, 'pipeline', '4_risk_knowledge_model', 'composite_rules.json')
+    indicator_rules_path = os.path.join(project_root, 'rules', 'indicator_rules.json')
+    composite_rules_path = os.path.join(project_root, 'rules', 'composite_rules.json')
     
     model = ScoringModel(
         indicator_rules_path=indicator_rules_path,
