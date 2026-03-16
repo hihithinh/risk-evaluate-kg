@@ -1,0 +1,41 @@
+{
+  "name": "knowledge-graph-nodejs",
+  "version": "1.0.0",
+  "description": "Knowledge-Based Inference Engine for Financial Risk Assessment",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "demo": "node demo.js",
+    "demo:forward": "node demo.js forward",
+    "demo:backward": "node demo.js backward",
+    "demo:comparison": "node demo.js comparison",
+    "demo:full": "node demo-full-pipeline.js",
+    "demo:full:single": "node demo-full-pipeline.js single",
+    "demo:full:batch": "node demo-full-pipeline.js batch",
+    "demo:full:comparison": "node demo-full-pipeline.js comparison",
+    "batch": "node demo-batch-pipeline.js",
+    "batch:full": "node demo-batch-pipeline.js full",
+    "batch:validation": "node demo-batch-pipeline.js validation",
+    "batch:inference": "node demo-batch-pipeline.js inference",
+    "batch:timeseries": "node demo-batch-pipeline.js timeseries",
+    "batch:compare": "node demo-batch-pipeline.js compare",
+    "crawler:test": "node crawler/DataCrawler.js test",
+    "crawler:crawl": "node crawler/DataCrawler.js crawl",
+    "infer": "node core/SingleSymbolInference.js",
+    "test": "node test/test-working-memory.js"
+  },
+  "keywords": [
+    "knowledge-graph",
+    "inference-engine",
+    "forward-chaining",
+    "backward-chaining",
+    "risk-assessment"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {}
+}

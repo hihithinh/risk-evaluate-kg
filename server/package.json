@@ -1,0 +1,31 @@
+{
+  "name": "risk-evaluation-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend server for Risk Evaluation System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --experimental-specifier-resolution=node app.js",
+    "dev": "nodemon --experimental-specifier-resolution=node app.js",
+    "test": "node --experimental-specifier-resolution=node test/api.test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "imports": {
+    "#src/*": "../src/*",
+    "#phases/*": "../src/phases/*",
+    "#configs/*": "../src/configs/*",
+    "#cache/*": "../src/cache/*",
+    "#crawler/*": "../src/crawler/*",
+    "#concepts/*": "../src/concepts/*"
+  }
+}

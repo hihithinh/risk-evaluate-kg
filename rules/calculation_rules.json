@@ -2,6 +2,8 @@
   "calculation_rules": [
     {
       "indicator": "A1",
+      "company_type": "REGULAR",
+      "description": "Current Ratio",
       "calculation": {
         "numerator": {
           "field": "CURRENT ASSETS (Bn. VND)"
@@ -13,7 +15,23 @@
       }
     },
     {
+      "indicator": "A1",
+      "company_type": "BANK",
+      "description": "Loan to Deposit Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Loans and advances to customers"
+        },
+        "denominator": {
+          "field": "Deposits from customers"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "A2",
+      "company_type": "REGULAR",
+      "description": "Quick Ratio",
       "calculation": {
         "numerator": {
           "operation": "subtract",
@@ -33,7 +51,23 @@
       }
     },
     {
+      "indicator": "A2",
+      "company_type": "BANK",
+      "description": "Liquid Assets Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "A3",
+      "company_type": "REGULAR",
+      "description": "Cash Ratio",
       "calculation": {
         "numerator": {
           "field": "Cash and cash equivalents (Bn. VND)"
@@ -45,7 +79,37 @@
       }
     },
     {
+      "indicator": "A3",
+      "company_type": "BANK",
+      "description": "Cash to Assets Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "B1",
+      "company_type": "REGULAR",
+      "description": "Debt Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "B1",
+      "company_type": "BANK",
+      "description": "Debt Ratio",
       "calculation": {
         "numerator": {
           "field": "LIABILITIES (Bn. VND)"
@@ -58,6 +122,22 @@
     },
     {
       "indicator": "B2",
+      "company_type": "REGULAR",
+      "description": "Debt to Equity",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "B2",
+      "company_type": "BANK",
+      "description": "Debt to Equity",
       "calculation": {
         "numerator": {
           "field": "LIABILITIES (Bn. VND)"
@@ -70,6 +150,8 @@
     },
     {
       "indicator": "B3",
+      "company_type": "REGULAR",
+      "description": "Interest Coverage",
       "calculation": {
         "numerator": {
           "operation": "add",
@@ -90,7 +172,23 @@
       }
     },
     {
+      "indicator": "B3",
+      "company_type": "BANK",
+      "description": "Equity Multiplier",
+      "calculation": {
+        "numerator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "C1",
+      "company_type": "REGULAR",
+      "description": "Inventory Turnover",
       "calculation": {
         "numerator": {
           "field": "Cost of Sales",
@@ -103,7 +201,23 @@
       }
     },
     {
+      "indicator": "C1",
+      "company_type": "BANK",
+      "description": "Cost to Income Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "General & Admin Expenses"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "C2",
+      "company_type": "REGULAR",
+      "description": "Receivables Turnover",
       "calculation": {
         "numerator": {
           "field": "Accounts receivable (Bn. VND)"
@@ -115,7 +229,23 @@
       }
     },
     {
+      "indicator": "C2",
+      "company_type": "BANK",
+      "description": "Asset Turnover",
+      "calculation": {
+        "numerator": {
+          "field": "Total operating revenue"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "C3",
+      "company_type": "REGULAR",
+      "description": "Asset Turnover",
       "calculation": {
         "numerator": {
           "field": "Net Sales"
@@ -127,7 +257,23 @@
       }
     },
     {
+      "indicator": "C3",
+      "company_type": "BANK",
+      "description": "Net Interest Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Net Interest Income"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "D1",
+      "company_type": "REGULAR",
+      "description": "Gross Profit Margin",
       "calculation": {
         "numerator": {
           "field": "Net Profit For the Year"
@@ -139,7 +285,23 @@
       }
     },
     {
+      "indicator": "D1",
+      "company_type": "BANK",
+      "description": "Gross Profit Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Net Interest Income"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "D2",
+      "company_type": "REGULAR",
+      "description": "Operating Profit Margin",
       "calculation": {
         "numerator": {
           "operation": "add",
@@ -160,13 +322,43 @@
       }
     },
     {
+      "indicator": "D2",
+      "company_type": "BANK",
+      "description": "Operating Profit Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Operating Profit before Provision"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
       "indicator": "D3",
+      "company_type": "REGULAR",
+      "description": "ROE",
       "calculation": {
         "numerator": {
           "field": "Net Profit For the Year"
         },
         "denominator": {
           "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D3",
+      "company_type": "BANK",
+      "description": "ROE",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
         },
         "operation": "divide"
       }
