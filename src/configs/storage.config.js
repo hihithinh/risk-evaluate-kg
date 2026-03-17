@@ -39,7 +39,7 @@ export const STORAGE_CONFIG = {
  * Get user-specific directory
  */
 export function getUserDirectory(uid) {
-  return path.join(STORAGE_CONFIG.APP, uid);
+  return path.join(STORAGE_CONFIG.UPLOADS, uid);
 }
 
 /**
@@ -57,14 +57,28 @@ export function getUserResultPath(uid, filename) {
 }
 
 /**
+ * Get user database path
+ */
+export function getUserDatabasePath(uid) {
+  return path.join(getUserDirectory(uid), 'database.db');
+}
+
+/**
+ * Get user database path (alias for consistency)
+ */
+export function getUserDbPath(uid) {
+  return getUserDatabasePath(uid);
+}
+
+/**
  * Ensure directories exist
  */
 export function ensureStorageDirectories() {
   const dirs = [
     STORAGE_CONFIG.ROOT,
     STORAGE_CONFIG.APP,
-    STORAGE_CONFIG.RULES,
     STORAGE_CONFIG.UPLOADS,
+    STORAGE_CONFIG.RULES,
     STORAGE_CONFIG.TEMP,
     STORAGE_CONFIG.LOGS,
   ];
@@ -74,4 +88,15 @@ export function ensureStorageDirectories() {
       fs.mkdirSync(dir, { recursive: true });
     }
   }
+}
+
+/**
+ * Ensure user-specific directory exists
+ */
+export function ensureUserDirectory(uid) {
+  const userDir = getUserDirectory(uid);
+  if (!fs.existsSync(userDir)) {
+    fs.mkdirSync(userDir, { recursive: true });
+  }
+  return userDir;
 }

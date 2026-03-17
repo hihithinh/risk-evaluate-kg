@@ -22,14 +22,11 @@ export class CompositeInferer {
    * Chạy suy diễn phức hợp (Phase 4 chính)
    */
   infer(evaluations) {
-    console.log('\n=== Phase 4: Composite Inference ===');
 
     if (!this.useForwardChaining) {
-      console.log('Using pattern matching mode (not forward chaining)');
       return this._patternMatchingInference(evaluations);
     }
 
-    console.log('Using Forward Chaining mode');
     
     // Forward Chaining
     const forwardResult = this.forwardChainer.inferenceLoop(evaluations);
@@ -47,7 +44,6 @@ export class CompositeInferer {
       backward_chaining: backwardQueries
     };
 
-    console.log('✓ Phase 4 completed\n');
     return result;
   }
 

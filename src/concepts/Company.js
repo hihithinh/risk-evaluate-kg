@@ -71,7 +71,7 @@ export class Company {
   }
 
   /**
-   * Lấy calculation rules cho loại công ty này
+   * Lấy indicator rules (luật tính toán chỉ số) cho loại công ty này
    * Abstract method - phải override ở subclass
    */
   getCalculationRules() {

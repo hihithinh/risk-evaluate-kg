@@ -3,6 +3,8 @@
  * Trace chuỗi suy luận và tạo justification tree
  */
 
+import fs from 'fs';
+
 export class InferenceStep {
   constructor(stepId, ruleId, inputFacts, outputFacts, ruleDescription, explanation) {
     this.stepId = stepId;
@@ -118,7 +120,7 @@ export class ExplanationEngine {
 
       const evalResult = evaluations[indicator];
 
-      if (condition.source === 'indicator_rules_output') {
+      if (condition.source === 'risk_signal_rules_output') {
         const field = condition.field || 'risk_level';
         const operator = condition.operator;
         const expected = condition.value;
@@ -229,7 +231,6 @@ export class ExplanationEngine {
    * Xuất inference trace ra file JSON
    */
   exportTrace(outputPath) {
-    const fs = require('fs');
     const traceData = {
       totalSteps: this.inferenceTrace.length,
       steps: this.getInferenceTrace()

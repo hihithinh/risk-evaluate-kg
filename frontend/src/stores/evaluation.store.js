@@ -12,6 +12,7 @@ export const useEvaluationStore = defineStore('evaluation', {
     currentPeriod: { year: 2026, quarter: 1 },
     result: null,
     indicatorRules: [],
+    compositeRules: [],
     loading: {
       started: false,
       step1: false,
@@ -43,7 +44,16 @@ export const useEvaluationStore = defineStore('evaluation', {
         this.indicatorRules = await evaluationService.getIndicatorRules()
       } catch (error) {
         this.error = error.message
-        console.error('Failed to load indicator rules:', error)
+        console.error('Failed to load risk signal rules:', error)
+      }
+    },
+
+    async loadCompositeRules() {
+      try {
+        this.compositeRules = await evaluationService.getCompositeRules()
+      } catch (error) {
+        this.error = error.message
+        console.error('Failed to load risk label rules:', error)
       }
     },
 
@@ -159,6 +169,7 @@ export const useEvaluationStore = defineStore('evaluation', {
       this.result.risk_assessment = step3.data.risk_assessment
       this.result.inference_stats = step3.data.inference_stats
       this.result.composite_risks = step3.data.composite_risks
+      this.result.llm_explanation = step3.data.llm_explanation
       this.result.company = { ...this.result.company, ...step3.data.company }
       // KHÔNG update financialData và indicators - đã có từ Step 1 và Step 2
       

@@ -76,9 +76,9 @@ async function demoSingleCompany() {
     console.error('1. Cần có file raw_financial_data.csv tại: ../dataset/');
     console.error('2. Cần có các rule files tại: ../rules/');
     console.error('   - schema_mapping.json');
-    console.error('   - calculation_rules.json');
-    console.error('   - indicator_rules.json');
-    console.error('   - composite_rules.json');
+    console.error('   - indicator_rules.json (luật tính toán chỉ số)');
+    console.error('   - risk_signal_rules.json (luật suy luận tín hiệu rủi ro)');
+    console.error('   - risk_label_rules.json (luật suy luận nhãn rủi ro)');
   }
 }
 

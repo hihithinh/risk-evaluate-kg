@@ -88,7 +88,7 @@ export class ForwardChainer {
    * Kiểm tra một điều kiện với fact data
    */
   _checkCondition(condition, factData) {
-    if (condition.source === 'indicator_rules_output') {
+    if (condition.source === 'risk_signal_rules_output') {
       const field = condition.field || 'risk_level';
       const operator = condition.operator;
       const expectedValue = condition.value;
@@ -160,8 +160,6 @@ export class ForwardChainer {
    * Vòng lặp suy diễn chính (FORWARD CHAINING LOOP)
    */
   inferenceLoop(evaluations) {
-    console.log('\n=== Forward Chaining Inference Loop ===');
-
     this.initializeWorkingMemory(evaluations);
     this.conflictResolver.reset();
     this.explanationEngine.reset();
@@ -169,7 +167,6 @@ export class ForwardChainer {
     this.totalRulesFired = 0;
 
     const initialFacts = this.workingMemory.size;
-    console.log(`Initial facts: ${initialFacts}`);
 
     while (this.iterationCount < this.maxIterations) {
       this.iterationCount++;
@@ -177,7 +174,6 @@ export class ForwardChainer {
       const matchingRules = this.findMatchingRules();
 
       if (matchingRules.length === 0) {
-        console.log(`✓ No more rules to fire. Stopping at iteration ${this.iterationCount}`);
         break;
       }
 
@@ -185,11 +181,8 @@ export class ForwardChainer {
       const selectedRule = this.conflictResolver.selectNextRule(matchingRules, wmSnapshot);
 
       if (!selectedRule) {
-        console.log(`✓ No rule selected by conflict resolver. Stopping at iteration ${this.iterationCount}`);
         break;
       }
-
-      console.log(`  Iteration ${this.iterationCount}: Firing rule ${selectedRule.rule_id} (matched ${matchingRules.length} rules)`);
 
       const newFacts = this.fireRule(selectedRule);
 
@@ -208,22 +201,13 @@ export class ForwardChainer {
       this.totalRulesFired++;
 
       if (factsAdded === 0) {
-        console.log(`✓ No new facts added. Stopping at iteration ${this.iterationCount}`);
         break;
       }
     }
 
     if (this.iterationCount >= this.maxIterations) {
-      console.log(`⚠ Reached max iterations (${this.maxIterations})`);
+      console.warn(`⚠ Reached max iterations (${this.maxIterations})`);
     }
-
-    const finalFacts = this.workingMemory.size;
-    console.log('\nInference completed:');
-    console.log(`  - Total iterations: ${this.iterationCount}`);
-    console.log(`  - Rules fired: ${this.totalRulesFired}`);
-    console.log(`  - Initial facts: ${initialFacts}`);
-    console.log(`  - Final facts: ${finalFacts}`);
-    console.log(`  - New facts created: ${finalFacts - initialFacts}`);
 
     return this._buildResult();
   }
@@ -262,36 +246,44 @@ export class ForwardChainer {
   }
 
   /**
-   * Tính điểm rủi ro tổng hợp
+   * Tính điểm rủi ro tổng hợp (RAW SCORE)
+   * 
+   * Thang điểm:
+   * - Phase 3 (Indicator Risk): Max 24 điểm (12 indicators × 2 điểm/indicator)
+   * - Phase 4 (Composite Risk): Tùy số rules kích hoạt (3-4 điểm/rule)
+   * 
+   * Ngưỡng phân loại (điểm thô):
+   * - Good: < 10 điểm
+   * - Medium: 10-20 điểm
+   * - High: ≥ 20 điểm
    */
   _calculateFinalScore(evaluations, compositeRisks) {
+    // Phase 3: Tính điểm từ indicator evaluations
     let indicatorPoints = 0;
     for (const evalResult of Object.values(evaluations)) {
       indicatorPoints += evalResult.risk_point || 0;
     }
 
+    // Phase 4: Tính điểm từ composite risks
     let compositePoints = 0;
     for (const risk of compositeRisks) {
       compositePoints += risk.risk_point || 0;
     }
 
+    // Tổng điểm thô (không chuẩn hóa)
     const totalPoints = indicatorPoints + compositePoints;
 
-    const maxIndicatorPoints = Object.keys(evaluations).length * 2;
-    const maxCompositePoints = this.rules.length * 4;
-    const maxTotalPoints = maxIndicatorPoints + maxCompositePoints;
-
-    const riskScore = maxTotalPoints > 0 ? totalPoints / maxTotalPoints : 0;
-
+    // Xác định risk level dựa trên điểm thô
     let riskLevel;
-    if (riskScore >= 0.7) {
+    if (totalPoints >= 20) {
       riskLevel = 'High';
-    } else if (riskScore >= 0.4) {
+    } else if (totalPoints >= 10) {
       riskLevel = 'Medium';
     } else {
       riskLevel = 'Good';
     }
 
+    // Đếm số indicators có risk level High
     const highRiskIndicators = [];
     for (const [ind, evalResult] of Object.entries(evaluations)) {
       if (evalResult.risk_level === 'High') {
@@ -299,15 +291,29 @@ export class ForwardChainer {
       }
     }
 
+    // Tính max points để tham khảo
+    const maxIndicatorPoints = Object.keys(evaluations).length * 2; // 12 × 2 = 24
+    const maxCompositePoints = this.rules.length * 4; // Ước tính
+    const maxTotalPoints = maxIndicatorPoints + maxCompositePoints;
+
     return {
       indicator_risk_points: indicatorPoints,
       composite_risk_points: compositePoints,
       total_risk_points: totalPoints,
+      max_indicator_points: maxIndicatorPoints,
+      max_composite_points: maxCompositePoints,
       max_total_points: maxTotalPoints,
-      risk_score: riskScore,
+      risk_score: totalPoints, // Điểm thô, không chuẩn hóa
       risk_level: riskLevel,
       composite_risk_count: compositeRisks.length,
-      high_risk_indicators: highRiskIndicators
+      high_risk_indicators: highRiskIndicators,
+      // Thêm thông tin ngưỡng để UI hiển thị
+      thresholds: {
+        good_max: 9,
+        medium_min: 10,
+        medium_max: 19,
+        high_min: 20
+      }
     };
   }
 

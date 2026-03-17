@@ -56,9 +56,15 @@ export default {
     return response // response đã được unwrap bởi interceptor
   },
 
-  // Get indicator rules for risk scoring
+  // Get risk signal rules (luật suy luận tín hiệu rủi ro)
   async getIndicatorRules() {
     const response = await api.get('/evaluation/indicator-rules')
+    return response.data
+  },
+
+  // Get risk label rules (luật suy luận nhãn rủi ro)
+  async getCompositeRules() {
+    const response = await api.get('/evaluation/composite-rules')
     return response.data
   }
 }

@@ -32,6 +32,11 @@ router.get('/current-period', (req, res, next) => controller.getCurrentPeriod(re
 router.get('/indicator-rules', (req, res, next) => controller.getIndicatorRules(req, res, next));
 
 /**
+ * GET /api/evaluation/composite-rules
+ */
+router.get('/composite-rules', (req, res, next) => controller.getCompositeRules(req, res, next));
+
+/**
  * POST /api/evaluation/load-financial-data
  * Step 1: Load raw financial data + company type
  */

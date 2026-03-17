@@ -1,374 +1,367 @@
-[
-  {
-    "indicator": "A1",
-    "name": "Current Ratio",
-    "category": "liquidity",
-    "ranges": [
-      {
-        "min": 2.0,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Current ratio cao cho thấy doanh nghiệp có khả năng thanh khoản tốt."
-      },
-      {
-        "min": 1.0,
-        "max": 2.0,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "liquidity_risk",
-        "explanation": "Current ratio ở mức trung bình, doanh nghiệp cần theo dõi khả năng thanh khoản."
-      },
-      {
-        "min": null,
-        "max": 1.0,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "liquidity_risk",
-        "explanation": "Current ratio thấp cho thấy doanh nghiệp có nguy cơ gặp khó khăn thanh khoản."
+{
+  "indicator_rules": [
+    {
+      "indicator": "A1",
+      "company_type": "REGULAR",
+      "description": "Current Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "CURRENT ASSETS (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "A2",
-    "name": "Quick Ratio",
-    "category": "liquidity",
-    "ranges": [
-      {
-        "min": 1.5,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Quick ratio cao cho thấy doanh nghiệp có khả năng thanh toán nhanh tốt."
-      },
-      {
-        "min": 0.8,
-        "max": 1.5,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "liquidity_risk",
-        "explanation": "Quick ratio ở mức trung bình, doanh nghiệp cần cải thiện khả năng thanh toán nhanh."
-      },
-      {
-        "min": null,
-        "max": 0.8,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "liquidity_risk",
-        "explanation": "Quick ratio thấp cho thấy doanh nghiệp có nguy cơ khó khăn trong thanh toán nhanh."
+    },
+    {
+      "indicator": "A1",
+      "company_type": "BANK",
+      "description": "Loan to Deposit Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Loans and advances to customers"
+        },
+        "denominator": {
+          "field": "Deposits from customers"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "A3",
-    "name": "Cash Ratio",
-    "category": "liquidity",
-    "ranges": [
-      {
-        "min": 0.5,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Cash ratio cao cho thấy doanh nghiệp có lượng tiền mặt dồi dào để thanh toán nợ ngắn hạn."
-      },
-      {
-        "min": 0.2,
-        "max": 0.5,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "liquidity_risk",
-        "explanation": "Cash ratio ở mức trung bình, doanh nghiệp nên tăng cường dự trữ tiền mặt."
-      },
-      {
-        "min": null,
-        "max": 0.2,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "liquidity_risk",
-        "explanation": "Cash ratio thấp cho thấy doanh nghiệp thiếu tiền mặt để thanh toán nợ ngắn hạn."
+    },
+    {
+      "indicator": "A2",
+      "company_type": "REGULAR",
+      "description": "Quick Ratio",
+      "calculation": {
+        "numerator": {
+          "operation": "subtract",
+          "operands": [
+            {
+              "field": "CURRENT ASSETS (Bn. VND)"
+            },
+            {
+              "field": "Inventories, Net (Bn. VND)"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "B1",
-    "name": "Debt Ratio",
-    "category": "leverage",
-    "ranges": [
-      {
-        "min": null,
-        "max": 0.5,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Debt ratio thấp cho thấy doanh nghiệp có cấu trúc vốn lành mạnh."
-      },
-      {
-        "min": 0.5,
-        "max": 0.7,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "leverage_risk",
-        "explanation": "Debt ratio ở mức trung bình, doanh nghiệp cần kiểm soát mức nợ."
-      },
-      {
-        "min": 0.7,
-        "max": null,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "leverage_risk",
-        "explanation": "Debt ratio cao cho thấy doanh nghiệp phụ thuộc nhiều vào nợ vay, có rủi ro tài chính cao."
+    },
+    {
+      "indicator": "A2",
+      "company_type": "BANK",
+      "description": "Liquid Assets Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "B2",
-    "name": "Debt to Equity Ratio",
-    "category": "leverage",
-    "ranges": [
-      {
-        "min": null,
-        "max": 1.0,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Debt to equity ratio thấp cho thấy doanh nghiệp có cân đối vốn tốt."
-      },
-      {
-        "min": 1.0,
-        "max": 2.0,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "leverage_risk",
-        "explanation": "Debt to equity ratio ở mức trung bình, doanh nghiệp cần cân nhắc giảm nợ."
-      },
-      {
-        "min": 2.0,
-        "max": null,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "leverage_risk",
-        "explanation": "Debt to equity ratio cao cho thấy doanh nghiệp phụ thuộc quá nhiều vào vốn vay so với vốn chủ sở hữu."
+    },
+    {
+      "indicator": "A3",
+      "company_type": "REGULAR",
+      "description": "Cash Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Current liabilities (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "B3",
-    "name": "Interest Coverage Ratio",
-    "category": "leverage",
-    "ranges": [
-      {
-        "min": 3.0,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Interest coverage ratio cao cho thấy doanh nghiệp có khả năng trả lãi vay tốt."
-      },
-      {
-        "min": 1.5,
-        "max": 3.0,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "leverage_risk",
-        "explanation": "Interest coverage ratio ở mức trung bình, doanh nghiệp cần theo dõi khả năng trả lãi."
-      },
-      {
-        "min": null,
-        "max": 1.5,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "leverage_risk",
-        "explanation": "Interest coverage ratio thấp cho thấy doanh nghiệp gặp khó khăn trong việc trả lãi vay."
+    },
+    {
+      "indicator": "A3",
+      "company_type": "BANK",
+      "description": "Cash to Assets Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "Cash and cash equivalents (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "C1",
-    "name": "Inventory Turnover",
-    "category": "efficiency",
-    "ranges": [
-      {
-        "min": 6.0,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Inventory turnover cao cho thấy doanh nghiệp quản lý hàng tồn kho hiệu quả."
-      },
-      {
-        "min": 3.0,
-        "max": 6.0,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "efficiency_risk",
-        "explanation": "Inventory turnover ở mức trung bình, doanh nghiệp cần cải thiện quản lý hàng tồn kho."
-      },
-      {
-        "min": null,
-        "max": 3.0,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "efficiency_risk",
-        "explanation": "Inventory turnover thấp cho thấy hàng tồn kho quay vòng chậm, có nguy cơ ứ đọng."
+    },
+    {
+      "indicator": "B1",
+      "company_type": "REGULAR",
+      "description": "Debt Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "C2",
-    "name": "Receivable Ratio",
-    "category": "efficiency",
-    "ranges": [
-      {
-        "min": null,
-        "max": 0.15,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Receivable ratio thấp cho thấy doanh nghiệp thu hồi công nợ hiệu quả."
-      },
-      {
-        "min": 0.15,
-        "max": 0.25,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "efficiency_risk",
-        "explanation": "Receivable ratio ở mức trung bình, doanh nghiệp cần tăng cường thu hồi công nợ."
-      },
-      {
-        "min": 0.25,
-        "max": null,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "efficiency_risk",
-        "explanation": "Receivable ratio cao cho thấy doanh nghiệp gặp khó khăn trong thu hồi công nợ."
+    },
+    {
+      "indicator": "B1",
+      "company_type": "BANK",
+      "description": "Debt Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "C3",
-    "name": "Fixed Asset Turnover",
-    "category": "efficiency",
-    "ranges": [
-      {
-        "min": 2.0,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Fixed asset turnover cao cho thấy doanh nghiệp sử dụng tài sản cố định hiệu quả."
-      },
-      {
-        "min": 1.0,
-        "max": 2.0,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "efficiency_risk",
-        "explanation": "Fixed asset turnover ở mức trung bình, doanh nghiệp cần tối ưu hóa sử dụng tài sản cố định."
-      },
-      {
-        "min": null,
-        "max": 1.0,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "efficiency_risk",
-        "explanation": "Fixed asset turnover thấp cho thấy tài sản cố định chưa được tận dụng hiệu quả."
+    },
+    {
+      "indicator": "B2",
+      "company_type": "REGULAR",
+      "description": "Debt to Equity",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "D1",
-    "name": "ROS",
-    "category": "profitability",
-    "ranges": [
-      {
-        "min": 0.1,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "ROS cao cho thấy doanh nghiệp có tỷ suất lợi nhuận trên doanh thu tốt."
-      },
-      {
-        "min": 0.05,
-        "max": 0.1,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "profitability_risk",
-        "explanation": "ROS ở mức trung bình, doanh nghiệp cần cải thiện hiệu quả hoạt động."
-      },
-      {
-        "min": null,
-        "max": 0.05,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "profitability_risk",
-        "explanation": "ROS thấp cho thấy doanh nghiệp có tỷ suất lợi nhuận kém, cần xem xét lại chiến lược kinh doanh."
+    },
+    {
+      "indicator": "B2",
+      "company_type": "BANK",
+      "description": "Debt to Equity",
+      "calculation": {
+        "numerator": {
+          "field": "LIABILITIES (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "D2",
-    "name": "Basic Earning Power",
-    "category": "profitability",
-    "ranges": [
-      {
-        "min": 0.15,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "Basic earning power cao cho thấy doanh nghiệp tạo lợi nhuận từ tài sản hiệu quả."
-      },
-      {
-        "min": 0.08,
-        "max": 0.15,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "profitability_risk",
-        "explanation": "Basic earning power ở mức trung bình, doanh nghiệp cần tối ưu hóa sử dụng tài sản."
-      },
-      {
-        "min": null,
-        "max": 0.08,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "profitability_risk",
-        "explanation": "Basic earning power thấp cho thấy doanh nghiệp không tạo ra lợi nhuận hiệu quả từ tài sản."
+    },
+    {
+      "indicator": "B3",
+      "company_type": "REGULAR",
+      "description": "Interest Coverage",
+      "calculation": {
+        "numerator": {
+          "operation": "add",
+          "operands": [
+            {
+              "field": "Profit before tax"
+            },
+            {
+              "field": "Interest Expenses",
+              "transform": "abs"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "Interest Expenses"
+        },
+        "operation": "divide"
       }
-    ]
-  },
-  {
-    "indicator": "D3",
-    "name": "ROA",
-    "category": "profitability",
-    "ranges": [
-      {
-        "min": 0.1,
-        "max": null,
-        "risk_level": "Good",
-        "risk_point": 0,
-        "risk_type": null,
-        "explanation": "ROA cao cho thấy doanh nghiệp sinh lợi tốt từ toàn bộ tài sản."
-      },
-      {
-        "min": 0.05,
-        "max": 0.1,
-        "risk_level": "Medium",
-        "risk_point": 1,
-        "risk_type": "profitability_risk",
-        "explanation": "ROA ở mức trung bình, doanh nghiệp cần cải thiện hiệu quả sinh lợi."
-      },
-      {
-        "min": null,
-        "max": 0.05,
-        "risk_level": "High",
-        "risk_point": 2,
-        "risk_type": "profitability_risk",
-        "explanation": "ROA thấp cho thấy doanh nghiệp có hiệu quả sinh lợi kém."
+    },
+    {
+      "indicator": "B3",
+      "company_type": "BANK",
+      "description": "Equity Multiplier",
+      "calculation": {
+        "numerator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
       }
-    ]
-  }
-]
+    },
+    {
+      "indicator": "C1",
+      "company_type": "REGULAR",
+      "description": "Inventory Turnover",
+      "calculation": {
+        "numerator": {
+          "field": "Cost of Sales",
+          "transform": "abs"
+        },
+        "denominator": {
+          "field": "Inventories, Net (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C1",
+      "company_type": "BANK",
+      "description": "Cost to Income Ratio",
+      "calculation": {
+        "numerator": {
+          "field": "General & Admin Expenses"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C2",
+      "company_type": "REGULAR",
+      "description": "Receivables Turnover",
+      "calculation": {
+        "numerator": {
+          "field": "Accounts receivable (Bn. VND)"
+        },
+        "denominator": {
+          "field": "Net Sales"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C2",
+      "company_type": "BANK",
+      "description": "Asset Turnover",
+      "calculation": {
+        "numerator": {
+          "field": "Total operating revenue"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C3",
+      "company_type": "REGULAR",
+      "description": "Asset Turnover",
+      "calculation": {
+        "numerator": {
+          "field": "Net Sales"
+        },
+        "denominator": {
+          "field": "Fixed assets (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "C3",
+      "company_type": "BANK",
+      "description": "Net Interest Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Net Interest Income"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D1",
+      "company_type": "REGULAR",
+      "description": "Gross Profit Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "Net Sales"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D1",
+      "company_type": "BANK",
+      "description": "Gross Profit Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Net Interest Income"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D2",
+      "company_type": "REGULAR",
+      "description": "Operating Profit Margin",
+      "calculation": {
+        "numerator": {
+          "operation": "add",
+          "operands": [
+            {
+              "field": "Profit before tax"
+            },
+            {
+              "field": "Interest Expenses",
+              "transform": "abs"
+            }
+          ]
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D2",
+      "company_type": "BANK",
+      "description": "Operating Profit Margin",
+      "calculation": {
+        "numerator": {
+          "field": "Operating Profit before Provision"
+        },
+        "denominator": {
+          "field": "Total operating revenue"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D3",
+      "company_type": "REGULAR",
+      "description": "ROE",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "TOTAL ASSETS (Bn. VND)"
+        },
+        "operation": "divide"
+      }
+    },
+    {
+      "indicator": "D3",
+      "company_type": "BANK",
+      "description": "ROE",
+      "calculation": {
+        "numerator": {
+          "field": "Net Profit For the Year"
+        },
+        "denominator": {
+          "field": "OWNER'S EQUITY(Bn.VND)"
+        },
+        "operation": "divide"
+      }
+    }
+  ]
+}

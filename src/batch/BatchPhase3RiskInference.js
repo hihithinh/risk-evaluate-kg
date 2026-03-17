@@ -1,10 +1,10 @@
 /**
  * Batch Phase 3: Risk Inference
  * Xử lý batch inference cho nhiều công ty
- * Tái sử dụng Phase2, Phase3, Phase4 từ single company pipeline
+ * Tái sử dụng Phase3, Phase4 từ single company pipeline
+ * (Phase 2 indicators đã được tính trước đó)
  */
 
-import { IndicatorCalculator } from '../phases/Phase2IndicatorCalculation.js';
 import { RiskEvaluator } from '../phases/Phase3RiskEvaluation.js';
 import { CompositeInferer } from '../phases/Phase4CompositeInference.js';
 
@@ -13,24 +13,29 @@ export class BatchRiskInferer {
     this.configDir = configDir;
     
     // Tái sử dụng các phases từ single company pipeline
-    this.indicatorCalculator = new IndicatorCalculator(
-      `${configDir}/calculation_rules.json`
-    );
     this.riskEvaluator = new RiskEvaluator(
-      `${configDir}/indicator_rules.json`
+      `${configDir}/risk_signal_rules.json`
     );
     this.compositeInferer = new CompositeInferer(
-      `${configDir}/composite_rules.json`,
+      `${configDir}/risk_label_rules.json`,
       true // use forward chaining
     );
   }
 
   /**
-   * Xử lý inference cho một công ty
+   * Infer risk cho một công ty (chỉ Phase 3 & 4, indicators đã được tính ở Phase 2)
    */
   inferSingleCompany(companyData) {
-    // Phase 2: Indicator Calculation
-    const indicators = this.indicatorCalculator.calculateAll(companyData);
+    // companyData already has indicators as {A1, A2, A3, B1, B2, B3, ...}
+    // No need to recalculate, just use them directly
+    const indicators = {};
+    
+    // Extract only indicator codes (A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3)
+    for (const [key, value] of Object.entries(companyData)) {
+      if (/^[A-D]\d+$/.test(key)) { // Match A1, A2, B1, etc.
+        indicators[key] = value;
+      }
+    }
 
     // Phase 3: Risk Evaluation
     const evaluations = this.riskEvaluator.evaluateAll(indicators);
@@ -50,22 +55,28 @@ export class BatchRiskInferer {
   /**
    * Xử lý batch inference cho nhiều công ty
    */
-  inferBatch(standardizedData) {
-    console.log('\n=== Batch Phase 3: Risk Inference ===');
-    console.log(`Processing ${standardizedData.length} companies...`);
-
+  inferBatch(indicatorData) {
     const results = [];
     let successCount = 0;
     let failCount = 0;
 
-    for (let i = 0; i < standardizedData.length; i++) {
-      const companyData = standardizedData[i];
-      const ticker = companyData.ticker || companyData['﻿ticker'];
-      const year = companyData.yearReport || companyData.year;
-      const quarter = companyData.lengthReport || companyData.quarter;
+    for (let i = 0; i < indicatorData.length; i++) {
+      const companyData = indicatorData[i];
+      const ticker = companyData.ticker;
+      const year = companyData.year;
+      const quarter = companyData.quarter;
 
       try {
-        const result = this.inferSingleCompany(companyData);
+        // Convert indicatorData structure to what inferSingleCompany expects
+        const companyForInference = {
+          ticker: ticker,
+          year: year,
+          quarter: quarter,
+          companyType: companyData.companyType,
+          ...companyData.indicators // Spread indicators to top level
+        };
+
+        const result = this.inferSingleCompany(companyForInference);
         
         results.push({
           ticker: ticker,
@@ -76,11 +87,6 @@ export class BatchRiskInferer {
         });
 
         successCount++;
-
-        // Progress indicator
-        if ((i + 1) % 100 === 0) {
-          console.log(`  Processed ${i + 1}/${standardizedData.length} companies...`);
-        }
 
       } catch (error) {
         results.push({
@@ -94,14 +100,10 @@ export class BatchRiskInferer {
       }
     }
 
-    console.log(`✓ Batch Phase 3 completed`);
-    console.log(`  Success: ${successCount}, Failed: ${failCount}`);
-    console.log('');
-
     return {
       results: results,
       summary: {
-        total: standardizedData.length,
+        total: indicatorData.length,
         success: successCount,
         failed: failCount
       }
@@ -136,7 +138,7 @@ export class BatchRiskInferer {
     for (const result of successResults) {
       const riskLevel = result.final_score?.risk_level || 'Unknown';
       riskDistribution[riskLevel] = (riskDistribution[riskLevel] || 0) + 1;
-      totalRiskScore += result.final_score?.risk_score || 0;
+      totalRiskScore += result.final_score?.total_risk_points || 0;
     }
 
     return {
@@ -144,7 +146,7 @@ export class BatchRiskInferer {
       successful_inferences: successResults.length,
       failed_inferences: batchResults.summary.failed,
       risk_distribution: riskDistribution,
-      average_risk_score: (totalRiskScore / successResults.length).toFixed(4),
+      average_risk_score: totalRiskScore / successResults.length, // Return number, not string
       high_risk_companies: successResults
         .filter(r => r.final_score?.risk_level === 'High')
         .map(r => ({ ticker: r.ticker, year: r.year, quarter: r.quarter }))
@@ -158,14 +160,14 @@ export class BatchRiskInferer {
     const successResults = batchResults.results.filter(r => r.status === 'success');
 
     return successResults
-      .sort((a, b) => (b.final_score?.risk_score || 0) - (a.final_score?.risk_score || 0))
+      .sort((a, b) => (b.final_score?.total_risk_points || 0) - (a.final_score?.total_risk_points || 0))
       .slice(0, topN)
       .map(r => ({
         ticker: r.ticker,
         year: r.year,
         quarter: r.quarter,
-        risk_score: r.final_score?.risk_score,
-        risk_level: r.final_score?.risk_level,
+        risk_score: r.final_score?.total_risk_points || 0,
+        risk_level: r.final_score?.risk_level || 'Unknown',
         composite_risks_count: r.composite_risks?.length || 0
       }));
   }
@@ -198,7 +200,7 @@ export class BatchRiskInferer {
           result.ticker,
           result.year,
           result.quarter,
-          (result.final_score?.risk_score * 100).toFixed(2),
+          result.final_score?.total_risk_points || 0,
           result.final_score?.risk_level,
           result.final_score?.total_risk_points,
           result.final_score?.max_total_points,

@@ -107,7 +107,7 @@
             <div class="flex items-center gap-2">
               <div class="w-6 h-6 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs">4
               </div>
-              <span>Risk Signal</span>
+              <span>Tín hiệu rủi ro</span>
             </div>
           </button>
 
@@ -126,7 +126,7 @@
             <div class="flex items-center gap-2">
               <div class="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs">5
               </div>
-              <span>Risk Label</span>
+              <span>Kết luận và đề xuất</span>
             </div>
           </button>
 
@@ -161,7 +161,7 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Ticker Symbol</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Mã chứng khoán</label>
               <input
                   v-model="symbol"
                   list="tickers"
@@ -175,7 +175,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Năm</label>
               <input
                   v-model.number="year"
                   type="number"
@@ -185,7 +185,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quarter</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Quý</label>
               <select v-model.number="quarter" class="input-field">
                 <option :value="1">Q1</option>
                 <option :value="2">Q2</option>
@@ -503,38 +503,12 @@
           <div class="flex items-center gap-2 mb-4">
             <div class="w-8 h-8 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold">4
             </div>
-            <h2 class="text-xl font-bold text-gray-900">Đánh giá Risk Signal cục bộ</h2>
-          </div>
-          <div class="flex items-center justify-between mb-6">
-            <div class="text-sm text-gray-600">Dựa trên {{ result.risk_assessment.risk_factors?.length || 0 }} chỉ số
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div>
-              <p class="text-sm text-gray-600 mb-1">Công ty</p>
-              <p class="text-2xl font-bold">{{ result.company.symbol }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600 mb-1">Kỳ báo cáo</p>
-              <p class="text-2xl font-bold">Q{{ result.company.quarter }}/{{ result.company.year }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600 mb-1">Mức rủi ro</p>
-              <p class="text-3xl font-bold" :class="getRiskColor(result.risk_assessment.risk_level)">
-                {{ result.risk_assessment.risk_level }}
-              </p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600 mb-1">Điểm rủi ro</p>
-              <p class="text-3xl font-bold text-gray-900">{{ result.risk_assessment.risk_score }}</p>
-            </div>
+            <h2 class="text-xl font-bold text-gray-900">Đánh giá tín hiệu rủi ro</h2>
           </div>
 
           <!-- Detailed Risk Factors Table -->
           <div v-if="result.risk_assessment.risk_factors && result.risk_assessment.risk_factors.length > 0"
                class="mt-6">
-            <h3 class="text-xl font-bold mb-3">Chi tiết rủi ro theo chỉ số</h3>
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -585,26 +559,89 @@
             </div>
           </div>
 
-          <!-- Recommendations -->
-          <div v-if="result.risk_assessment.recommendations && result.risk_assessment.recommendations.length > 0"
-               class="mt-6">
-            <h3 class="text-xl font-bold mb-3">Khuyến nghị</h3>
-            <ul class="list-disc list-inside text-gray-700">
-              <li v-for="(rec, recIndex) in result.risk_assessment.recommendations" :key="recIndex">{{ rec }}</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Bước 5: Composite Risks -->
-        <div v-if="result.composite_risks && result.composite_risks.length > 0"
-             v-show="viewType === 'list' || activeTab === 'composite'" class="bg-orange-50 rounded-lg shadow p-6">
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">5
+          <!-- Inference Flow Diagram - SVG Flowchart -->
+          <div class="my-6 p-4 bg-white rounded-lg border-2 border-orange-300">
+            <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Luồng suy luận
+            </h4>
+            <div class="text-sm text-gray-600 mb-4">
+              Hệ thống suy luận theo 3 bước: <strong>Chỉ số tài chính</strong> → <strong>Tín hiệu rủi ro</strong> → <strong>Nhãn rủi ro</strong>
             </div>
-            <h2 class="text-xl font-bold text-gray-900">Đánh giá Risk Label toàn diện</h2>
+            
+            <!-- SVG Flowchart -->
+            <div class="bg-gradient-to-r from-blue-50 via-yellow-50 to-red-50 rounded-lg p-6 overflow-x-auto">
+              <svg :width="getFlowchartWidth()" :height="getFlowchartHeight()" class="mx-auto">
+                <defs>
+                  <!-- Arrow marker -->
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+                  </marker>
+                </defs>
+
+                <!-- Column headers -->
+                <text x="100" y="20" text-anchor="middle" class="text-xs font-semibold fill-gray-600">Chỉ số tài chính</text>
+                <text x="400" y="20" text-anchor="middle" class="text-xs font-semibold fill-gray-600">Tín hiệu rủi ro</text>
+                <text x="700" y="20" text-anchor="middle" class="text-xs font-semibold fill-gray-600">Nhãn rủi ro</text>
+
+                <!-- Draw indicators (Column 1) -->
+                <g v-for="(factor, idx) in getHighRiskFactors()" :key="'ind-' + factor.indicator">
+                  <rect :x="20" :y="getNodeY(idx, getHighRiskFactors().length)" width="160" height="60" rx="8" 
+                        fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                  <text :x="100" :y="getNodeY(idx, getHighRiskFactors().length) + 25" text-anchor="middle" class="text-sm font-mono font-bold fill-blue-900">
+                    {{ factor.indicator }}
+                  </text>
+                  <text :x="100" :y="getNodeY(idx, getHighRiskFactors().length) + 45" text-anchor="middle" class="text-xs fill-blue-700">
+                    {{ factor.name }}
+                  </text>
+                </g>
+
+                <!-- Draw risk signals (Column 2) -->
+                <g v-for="(signal, idx) in getRiskSignals()" :key="'sig-' + signal.type">
+                  <rect :x="320" :y="getNodeY(idx, getRiskSignals().length)" width="160" height="60" rx="8" 
+                        fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                  <text :x="400" :y="getNodeY(idx, getRiskSignals().length) + 25" text-anchor="middle" class="text-sm font-semibold fill-yellow-900">
+                    {{ signal.type }}
+                  </text>
+                  <text :x="400" :y="getNodeY(idx, getRiskSignals().length) + 45" text-anchor="middle" class="text-xs fill-yellow-700">
+                    {{ signal.indicators.join(', ') }}
+                  </text>
+                </g>
+
+                <!-- Draw risk labels (Column 3) -->
+                <g v-for="(risk, idx) in result.composite_risks" :key="'label-' + risk.rule_id">
+                  <rect :x="620" :y="getNodeY(idx, result.composite_risks.length)" width="160" height="70" rx="8" 
+                        :fill="risk.severity === 'high' ? '#dc2626' : '#f59e0b'" 
+                        stroke="#991b1b" stroke-width="2"/>
+                  <text :x="700" :y="getNodeY(idx, result.composite_risks.length) + 25" text-anchor="middle" class="text-sm font-bold fill-white">
+                    {{ risk.risk_type }}
+                  </text>
+                  <!-- Multi-line text for description -->
+                  <foreignObject :x="625" :y="getNodeY(idx, result.composite_risks.length) + 35" width="150" height="30">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-xs text-white text-center leading-tight px-1" style="opacity: 0.9; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                      {{ risk.description }}
+                    </div>
+                  </foreignObject>
+                </g>
+
+                <!-- Draw connections: Indicators -> Risk Signals -->
+                <g v-for="connection in getIndicatorToSignalConnections()" :key="'conn1-' + connection.from + '-' + connection.to">
+                  <line :x1="180" :y1="connection.fromY" :x2="320" :y2="connection.toY" 
+                        stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" opacity="0.6"/>
+                </g>
+
+                <!-- Draw connections: Risk Signals -> Risk Labels -->
+                <g v-for="connection in getSignalToLabelConnections()" :key="'conn2-' + connection.from + '-' + connection.to">
+                  <line :x1="480" :y1="connection.fromY" :x2="620" :y2="connection.toY" 
+                        stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" opacity="0.6"/>
+                </g>
+              </svg>
+            </div>
           </div>
-          <p class="text-gray-600 mb-4">Hệ thống đã phát hiện các tín hiệu rủi ro phức hợp từ việc kết hợp nhiều chỉ số
-            tài chính:</p>
+
+          <p class="text-gray-600 my-4">Các nhãn rủi ro được phát hiện:</p>
           <div class="space-y-4">
             <div
                 v-for="(risk, index) in result.composite_risks"
@@ -635,6 +672,104 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Bước 5: Composite Risks -->
+        <div v-if="result.composite_risks && result.composite_risks.length > 0"
+             v-show="viewType === 'list' || activeTab === 'composite'" class="bg-orange-50 rounded-lg shadow p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">5
+            </div>
+            <h2 class="text-xl font-bold text-gray-900">Kết luận và đề xuất</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Công ty</p>
+              <p class="text-2xl font-bold">{{ result.company.symbol }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Kỳ báo cáo</p>
+              <p class="text-2xl font-bold">Q{{ result.company.quarter }}/{{ result.company.year }}</p>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <p class="text-sm text-gray-600">Mức rủi ro</p>
+                <button
+                  @mouseenter="showRiskLevelTooltip($event)"
+                  @mouseleave="hideRiskLevelTooltip"
+                  class="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-3xl font-bold" :class="getRiskColor(result.risk_assessment.risk_level)">
+                {{ result.risk_assessment.risk_level }}
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Điểm rủi ro tổng</p>
+              <p class="text-3xl font-bold text-gray-900">{{ result.risk_assessment.risk_score }}</p>
+              <p class="text-xs text-gray-500 mt-1">
+                Từ tín hiệu rủi ro: {{ result.risk_assessment.phase3_risk_score || 0 }}
+                <span v-if="result.risk_assessment.composite_risk_points > 0">
+                  + từ nhãn rủi ro: {{ result.risk_assessment.composite_risk_points }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- LLM Explanation Section -->
+          <div v-if="result.llm_explanation && result.llm_explanation.enabled && result.llm_explanation.ai_recommendations" class="mt-6 border-t-2 border-orange-300 pt-6">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              <h3 class="text-lg font-bold text-orange-900">Phân tích chuyên sâu từ AI</h3>
+            </div>
+
+            <!-- Overview -->
+            <div v-if="result.llm_explanation.overview" class="mb-4 p-4 bg-white rounded-lg border border-orange-200">
+              <h4 class="font-semibold text-gray-900 mb-2">📊 Tổng quan</h4>
+              <div class="prose prose-sm max-w-none" v-html="renderMarkdown(result.llm_explanation.overview)"></div>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div class="p-4 bg-white rounded-lg border border-orange-200">
+              <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Khuyến nghị hành động
+              </h4>
+              <div class="prose prose-sm max-w-none" v-html="renderMarkdown(result.llm_explanation.ai_recommendations.join('\n'))"></div>
+            </div>
+
+            <!-- Detailed Analysis (Collapsible) -->
+            <div v-if="result.llm_explanation.detailed_analysis" class="mt-4">
+              <button 
+                @click="showDetailedAnalysis = !showDetailedAnalysis"
+                class="w-full flex items-center justify-between p-3 bg-white rounded-lg border border-orange-200 hover:bg-orange-50 transition-colors"
+              >
+                <span class="font-semibold text-gray-900">📝 Phân tích chi tiết</span>
+                <svg class="w-5 h-5 transition-transform" :class="showDetailedAnalysis ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div v-show="showDetailedAnalysis" class="mt-2 p-4 bg-white rounded-lg border border-orange-200">
+                <div class="prose prose-sm max-w-none" v-html="renderMarkdown(result.llm_explanation.detailed_analysis)"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- LLM Disabled Notice -->
+          <div v-else-if="result.llm_explanation && !result.llm_explanation.enabled" class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-300">
+            <p class="text-sm text-gray-600">
+              ℹ️ Phân tích AI chưa được kích hoạt. Vui lòng cấu hình OpenAI API key trong file .env để sử dụng tính năng này.
+            </p>
           </div>
         </div>
 
@@ -815,14 +950,54 @@
     <p class="font-medium">⚠️ Chưa có dữ liệu</p>
     <p class="text-xs text-gray-300 mt-1">Hãy nhập liệu trước và bấm <strong>Đánh giá rủi ro</strong></p>
   </div>
+
+  <!-- Risk Level Tooltip -->
+  <div
+      id="risk-level-tooltip"
+      v-show="riskLevelTooltipInstance"
+      class="bg-gray-900 text-white px-4 py-3 rounded shadow-lg text-sm z-50"
+      style="position: absolute; top: 0; left: 0; min-width: 280px;"
+  >
+    <p class="font-semibold mb-2">📊 Ngưỡng phân loại rủi ro</p>
+    <div class="space-y-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-16 px-2 py-1 rounded bg-green-600 text-white font-semibold text-center">Good</span>
+        <span class="text-gray-300">< 10 điểm</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-16 px-2 py-1 rounded bg-yellow-600 text-white font-semibold text-center">Medium</span>
+        <span class="text-gray-300">10-19 điểm</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-16 px-2 py-1 rounded bg-red-600 text-white font-semibold text-center">High</span>
+        <span class="text-gray-300">≥ 20 điểm</span>
+      </div>
+    </div>
+    <p class="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-700">
+      Điểm = Tín hiệu rủi ro (Phase 3) + Rủi ro phức hợp (Phase 4)
+    </p>
+  </div>
 </template>
 
 <script setup>
 import {ref, computed, onMounted, nextTick} from 'vue'
 import {useEvaluationStore} from '@/stores/evaluation.store'
 import {createPopper} from '@popperjs/core'
+import {marked} from 'marked'
 
 const store = useEvaluationStore()
+
+// Configure marked for safe rendering
+marked.setOptions({
+  breaks: true,
+  gfm: true
+})
+
+// Render markdown to HTML
+const renderMarkdown = (text) => {
+  if (!text) return ''
+  return marked.parse(text)
+}
 
 const symbol = ref('ACB')
 const year = ref(2024)
@@ -834,6 +1009,8 @@ const popperInstance = ref(null)
 const viewType = ref('list') // 'list' or 'tabs'
 const activeTab = ref('input') // 'input', 'financial', 'indicators', 'risk', 'composite', 'inference'
 const tabTooltipInstance = ref(null)
+const riskLevelTooltipInstance = ref(null)
+const showDetailedAnalysis = ref(false)
 
 const showPopover = async (event, indicatorCode) => {
   const button = event.currentTarget
@@ -937,16 +1114,48 @@ const hideTabTooltip = () => {
   }
 }
 
+const showRiskLevelTooltip = async (event) => {
+  const button = event.currentTarget
+  const tooltip = document.getElementById('risk-level-tooltip')
+
+  if (riskLevelTooltipInstance.value) {
+    riskLevelTooltipInstance.value.destroy()
+  }
+
+  await nextTick()
+
+  riskLevelTooltipInstance.value = createPopper(button, tooltip, {
+    placement: 'top',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 8],
+        },
+      },
+    ],
+  })
+}
+
+const hideRiskLevelTooltip = () => {
+  if (riskLevelTooltipInstance.value) {
+    riskLevelTooltipInstance.value.destroy()
+    riskLevelTooltipInstance.value = null
+  }
+}
+
 const tickers = computed(() => store.tickers)
 const result = computed(() => store.result)
 const loading = computed(() => store.loading)
 const error = computed(() => store.error)
 const indicatorRules = computed(() => store.indicatorRules)
+const compositeRules = computed(() => store.compositeRules)
 
 onMounted(async () => {
   await store.loadTickers()
   await store.loadCurrentPeriod()
   await store.loadIndicatorRules()
+  await store.loadCompositeRules()
   year.value = store.currentPeriod.year
   quarter.value = store.currentPeriod.quarter
 })
@@ -967,6 +1176,155 @@ function getCompanyTypeDescription(type) {
     'REGULAR': 'Công ty thường - Sử dụng các chỉ số tài chính chuẩn như Current Ratio, ROE, ROA'
   }
   return descriptions[type] || 'Unknown company type'
+}
+
+function getHighRiskFactors() {
+  // Get all High and Medium risk factors from Phase 3
+  if (!result.value?.risk_assessment?.risk_factors) {
+    return []
+  }
+  
+  return result.value.risk_assessment.risk_factors.filter(
+    f => f.risk_level === 'High' || f.risk_level === 'Medium'
+  )
+}
+
+function getRiskSignals() {
+  // Group indicators by their risk_type to show risk signals
+  const signals = {}
+  
+  if (!result.value?.risk_assessment?.risk_factors) {
+    return []
+  }
+  
+  result.value.risk_assessment.risk_factors.forEach(factor => {
+    if (factor.risk_level === 'High' || factor.risk_level === 'Medium') {
+      const riskType = factor.risk_type || 'unknown_risk'
+      
+      if (!signals[riskType]) {
+        signals[riskType] = {
+          type: riskType,
+          indicators: []
+        }
+      }
+      
+      signals[riskType].indicators.push(factor.indicator)
+    }
+  })
+  
+  return Object.values(signals)
+}
+
+function getFlowchartWidth() {
+  return 800
+}
+
+function getFlowchartHeight() {
+  const indicators = getHighRiskFactors().length
+  const signals = getRiskSignals().length
+  const labels = result.value?.composite_risks?.length || 0
+  
+  const maxRows = Math.max(indicators, signals, labels)
+  return 50 + maxRows * 65 + 30 // header + rows + padding (reduced spacing)
+}
+
+function getNodeY(index, totalNodes, nodeHeight = 70) {
+  // Calculate Y position for vertical centering
+  const maxNodes = Math.max(
+    getHighRiskFactors().length,
+    getRiskSignals().length,
+    result.value?.composite_risks?.length || 0
+  )
+  
+  const totalHeight = maxNodes * 65 // reduced from 80 to 65
+  const columnHeight = totalNodes * 65
+  const offset = (totalHeight - columnHeight) / 2
+  
+  return 50 + offset + index * 65 // reduced spacing
+}
+
+function getIndicatorToSignalConnections() {
+  // Connect each indicator to its corresponding risk signal
+  const connections = []
+  const factors = getHighRiskFactors()
+  const signals = getRiskSignals()
+  
+  factors.forEach((factor, factorIdx) => {
+    // Find which signal this indicator belongs to
+    const signalIdx = signals.findIndex(s => 
+      s.indicators.includes(factor.indicator)
+    )
+    
+    if (signalIdx >= 0) {
+      connections.push({
+        from: factor.indicator,
+        to: signals[signalIdx].type,
+        fromY: getNodeY(factorIdx, factors.length) + 30, // Center of indicator box
+        toY: getNodeY(signalIdx, signals.length) + 30     // Center of signal box
+      })
+    }
+  })
+  
+  return connections
+}
+
+function getSignalToLabelConnections() {
+  // Connect risk signals to risk labels based on risk label rule conditions
+  const connections = []
+  const signals = getRiskSignals()
+  const labels = result.value?.composite_risks || []
+  
+  labels.forEach((label, labelIdx) => {
+    // Get the conditions for this risk label from risk label rules
+    const rule = compositeRules.value?.find(r => r.rule_id === label.rule_id)
+    
+    if (rule && rule.conditions) {
+      // Get unique risk_types from the conditions
+      const riskTypes = new Set()
+      
+      rule.conditions.forEach(condition => {
+        // Find the risk_type for this indicator from risk_factors
+        const factor = result.value?.risk_assessment?.risk_factors?.find(
+          f => f.indicator === condition.indicator
+        )
+        
+        if (factor && factor.risk_type) {
+          riskTypes.add(factor.risk_type)
+        }
+      })
+      
+      // Connect each unique risk_type to this label
+      riskTypes.forEach(riskType => {
+        const signalIdx = signals.findIndex(s => s.type === riskType)
+        
+        if (signalIdx >= 0) {
+          connections.push({
+            from: riskType,
+            to: label.risk_type,
+            fromY: getNodeY(signalIdx, signals.length) + 30,
+            toY: getNodeY(labelIdx, labels.length) + 35
+          })
+        }
+      })
+    }
+  })
+  
+  return connections
+}
+
+function getConditionsForRisk(risk) {
+  // Find the actual rule from risk label rules
+  const rule = compositeRules.value?.find(r => r.rule_id === risk.rule_id)
+  
+  if (!rule || !rule.conditions) {
+    return [{ indicator: '?', value: 'High' }]
+  }
+  
+  // Extract conditions from the rule
+  return rule.conditions.map(condition => ({
+    indicator: condition.indicator,
+    value: condition.value
+  }))
 }
 
 function formatFinancialValue(fieldName, value) {

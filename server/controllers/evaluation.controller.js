@@ -164,11 +164,28 @@ export class EvaluationController {
 
   /**
    * GET /api/evaluation/indicator-rules
-   * Get indicator rules for risk scoring
+   * Get risk signal rules (luật suy luận tín hiệu rủi ro)
    */
   async getIndicatorRules(req, res, next) {
     try {
       const rules = await evaluationService.getIndicatorRules();
+      
+      res.json({
+        success: true,
+        data: rules
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/evaluation/composite-rules
+   * Get risk label rules (luật suy luận nhãn rủi ro)
+   */
+  async getCompositeRules(req, res, next) {
+    try {
+      const rules = await evaluationService.getCompositeRules();
       
       res.json({
         success: true,

@@ -52,6 +52,9 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
+  // Ensure storage directories exist
+  ensureStorageDirectories();
+  
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📊 API endpoints:`);
   console.log(`   - Knowledge Management: http://localhost:${PORT}/api/knowledge`);

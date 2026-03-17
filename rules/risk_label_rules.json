@@ -5,14 +5,14 @@
     "conditions": [
       {
         "indicator": "B1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "D3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -31,14 +31,14 @@
     "conditions": [
       {
         "indicator": "A1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "B1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -57,14 +57,14 @@
     "conditions": [
       {
         "indicator": "A3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "B2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -83,14 +83,14 @@
     "conditions": [
       {
         "indicator": "B3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "in",
         "value": ["Medium", "High"]
       },
       {
         "indicator": "B1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "in",
         "value": ["Medium", "High"]
@@ -109,14 +109,14 @@
     "conditions": [
       {
         "indicator": "C1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "D1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -135,14 +135,14 @@
     "conditions": [
       {
         "indicator": "C2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "A3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -161,14 +161,14 @@
     "conditions": [
       {
         "indicator": "C3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "D2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -187,21 +187,21 @@
     "conditions": [
       {
         "indicator": "A1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "A2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "A3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -220,21 +220,21 @@
     "conditions": [
       {
         "indicator": "D1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "D2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "D3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -253,14 +253,14 @@
     "conditions": [
       {
         "indicator": "A1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "Good"
       },
       {
         "indicator": "D3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -279,14 +279,14 @@
     "conditions": [
       {
         "indicator": "B1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "Medium"
       },
       {
         "indicator": "D3",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "Good"
@@ -305,14 +305,14 @@
     "conditions": [
       {
         "indicator": "C1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "C2",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
@@ -331,14 +331,14 @@
     "conditions": [
       {
         "indicator": "A1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"
       },
       {
         "indicator": "B1",
-        "source": "indicator_rules_output",
+        "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
         "value": "High"

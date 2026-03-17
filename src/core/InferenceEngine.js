@@ -19,13 +19,13 @@ export class InferenceEngine {
       path.join(configDir, 'schema_mapping.json')
     );
     this.phase2 = new IndicatorCalculator(
-      path.join(configDir, 'calculation_rules.json')
-    );
-    this.phase3 = new RiskEvaluator(
       path.join(configDir, 'indicator_rules.json')
     );
+    this.phase3 = new RiskEvaluator(
+      path.join(configDir, 'risk_signal_rules.json')
+    );
     this.phase4 = new CompositeInferer(
-      path.join(configDir, 'composite_rules.json'),
+      path.join(configDir, 'risk_label_rules.json'),
       useForwardChaining
     );
   }

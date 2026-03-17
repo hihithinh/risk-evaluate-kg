@@ -117,7 +117,7 @@ function demoForwardChaining() {
   console.log('- Kích hoạt rule → tạo facts mới');
   console.log('- Lặp lại cho đến khi không còn rules nào');
   
-  const rulesPath = path.join(__dirname, '../rules/composite_rules.json');
+  const rulesPath = path.join(__dirname, '../rules/risk_label_rules.json');
   
   try {
     const forwardChainer = new ForwardChainer(rulesPath);
@@ -156,7 +156,7 @@ function demoForwardChaining() {
     
   } catch (error) {
     console.error('Error:', error.message);
-    console.error('\nLưu ý: Cần có file composite_rules.json tại:');
+    console.error('\nLưu ý: Cần có file risk_label_rules.json tại:');
     console.error(rulesPath);
   }
 }
@@ -170,7 +170,7 @@ function demoBackwardChaining() {
   console.log('- Đệ quy chứng minh các điều kiện');
   console.log('- Trả về proof chain nếu thành công');
   
-  const rulesPath = path.join(__dirname, '../rules/composite_rules.json');
+  const rulesPath = path.join(__dirname, '../rules/risk_label_rules.json');
   
   try {
     const backwardChainer = new BackwardChainer(rulesPath);
@@ -221,7 +221,7 @@ function demoBackwardChaining() {
     
   } catch (error) {
     console.error('Error:', error.message);
-    console.error('\nLưu ý: Cần có file composite_rules.json tại:');
+    console.error('\nLưu ý: Cần có file risk_label_rules.json tại:');
     console.error(rulesPath);
   }
 }

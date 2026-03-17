@@ -5,6 +5,7 @@
  */
 
 import { DataStandardizer } from '../phases/Phase1DataStandardization.js';
+import { IndicatorCalculatorV2 } from '../phases/Phase2IndicatorCalculationV2.js';
 import { StatisticalValidator } from './BatchPhase2StatisticalValidation.js';
 import { BatchRiskInferer } from './BatchPhase3RiskInference.js';
 import fs from 'fs';
@@ -18,10 +19,13 @@ export class BatchInferenceEngine {
       `${configDir}/schema_mapping.json`
     );
 
-    // Batch Phase 2: Statistical Validation
+    // Batch Phase 2: Indicator Calculation
+    this.indicatorCalculator = new IndicatorCalculatorV2();
+
+    // Batch Phase 3: Statistical Validation
     this.statisticalValidator = new StatisticalValidator();
 
-    // Batch Phase 3: Risk Inference (tái sử dụng Phase2-4)
+    // Batch Phase 4: Risk Inference (tái sử dụng Phase2-4)
     this.batchRiskInferer = new BatchRiskInferer(configDir);
   }
 
@@ -40,38 +44,51 @@ export class BatchInferenceEngine {
     } = options;
 
     // Batch Phase 1: Data Processing
-    console.log('\n=== Batch Phase 1: Data Processing ===');
     const standardizedData = await this.dataStandardizer.standardize(rawDataPath);
-    console.log(`✓ Standardized ${standardizedData.length} records`);
+
+    // Batch Phase 2: Indicator Calculation
+    const indicatorData = this.indicatorCalculator.calculateBatch(standardizedData);
+
+    // Flatten indicator data for statistical validation
+    const flattenedIndicatorData = indicatorData?.map(company => ({
+      ...company.indicators,
+      ticker: company.ticker,
+      year: company.year,
+      quarter: company.quarter,
+      companyType: company.companyType
+    })) || [];
 
     const results = {
       data_processing: {
-        total_records: standardizedData.length,
-        standardized_data: standardizedData
+        total_records: standardizedData?.length || 0
+      },
+      indicator_calculation: {
+        total_records: indicatorData?.length || 0
       }
     };
 
-    // Batch Phase 2: Statistical Validation
+    // Batch Phase 3: Statistical Validation
     if (runStatisticalValidation) {
-      const validationResult = this.statisticalValidator.validate(standardizedData);
+      const validationResult = this.statisticalValidator.validate(flattenedIndicatorData);
       results.statistical_validation = validationResult;
 
-      // Generate report
-      const report = this.statisticalValidator.generateReport(validationResult);
-      results.statistical_report = report;
+      // Report is already generated internally in validate() method
+      results.statistical_report = validationResult._internal?.report || 'Report not available';
     }
 
-    // Batch Phase 3: Risk Inference
+    // Batch Phase 4: Risk Inference
     if (runRiskInference) {
-      const batchResults = this.batchRiskInferer.inferBatch(standardizedData);
-      results.risk_inference = batchResults;
-
-      // Calculate summary
+      const batchResults = this.batchRiskInferer.inferBatch(indicatorData);
+      
+      // Only keep summary and top companies, not detailed results
       const summary = this.batchRiskInferer.calculateBatchSummary(batchResults);
-      results.risk_summary = summary;
-
-      // Get top risk companies
       const topRisk = this.batchRiskInferer.getTopRiskCompanies(batchResults, 10);
+      
+      results.risk_inference = {
+        summary: summary,
+        results: batchResults.results.slice(0, 10), // Keep only first 10 for frontend preview
+        _all_results: batchResults.results // Store all results for CSV export
+      };
       results.top_risk_companies = topRisk;
     }
 
@@ -93,16 +110,16 @@ export class BatchInferenceEngine {
 
     // Load and standardize data
     const standardizedData = await this.dataStandardizer.standardize(rawDataPath);
+    console.log('🔍 Standardized data length:', standardizedData?.length);
 
     // Filter data
-    const filteredData = standardizedData.filter(filterFn);
+    const filteredData = standardizedData?.filter(filterFn) || [];
     console.log(`Filtered to ${filteredData.length} records`);
 
     // Run validation and inference on filtered data
     const results = {
       data_processing: {
-        total_records: filteredData.length,
-        standardized_data: filteredData
+        total_records: filteredData.length
       }
     };
 
@@ -170,12 +187,12 @@ export class BatchInferenceEngine {
     if (results.risk_inference) {
       const ranking = results.risk_inference.results
         .filter(r => r.status === 'success')
-        .sort((a, b) => a.final_score.risk_score - b.final_score.risk_score)
+        .sort((a, b) => (a.final_score?.total_risk_points || 0) - (b.final_score?.total_risk_points || 0))
         .map((r, index) => ({
           rank: index + 1,
           ticker: r.ticker,
-          risk_score: (r.final_score.risk_score * 100).toFixed(2) + '%',
-          risk_level: r.final_score.risk_level
+          risk_score: r.final_score?.total_risk_points || 0,
+          risk_level: r.final_score?.risk_level || 'Unknown'
         }));
 
       results.ranking = ranking;
@@ -206,8 +223,8 @@ export class BatchInferenceEngine {
       const cronbachCSV = this._arrayToCSV(results.statistical_validation.cronbach_results);
       fs.writeFileSync(`${outputDir}/cronbach_results.csv`, cronbachCSV);
 
-      // Item analysis
-      const itemAnalysisCSV = this._arrayToCSV(results.statistical_validation.item_analysis);
+      // Item analysis (now in _internal)
+      const itemAnalysisCSV = this._arrayToCSV(results.statistical_validation._internal?.item_analysis || []);
       fs.writeFileSync(`${outputDir}/item_analysis.csv`, itemAnalysisCSV);
 
       // Statistical report
@@ -241,14 +258,13 @@ export class BatchInferenceEngine {
       }
     }
 
-    console.log('✓ Export completed\n');
   }
 
   /**
    * Convert array of objects to CSV
    */
   _arrayToCSV(array) {
-    if (array.length === 0) return '';
+    if (!array || array.length === 0) return '';
 
     const headers = Object.keys(array[0]);
     const rows = [headers.join(',')];
@@ -292,7 +308,7 @@ export class BatchInferenceEngine {
       console.log(`  Total companies: ${results.risk_summary.total_companies}`);
       console.log(`  Successful: ${results.risk_summary.successful_inferences}`);
       console.log(`  Failed: ${results.risk_summary.failed_inferences}`);
-      console.log(`  Average risk score: ${(results.risk_summary.average_risk_score * 100).toFixed(2)}%`);
+      console.log(`  Average risk score: ${results.risk_summary.average_risk_score?.toFixed(2) || 'N/A'} points`);
       console.log(`\n  Risk Distribution:`);
       for (const [level, count] of Object.entries(results.risk_summary.risk_distribution)) {
         if (count > 0) {
@@ -307,7 +323,7 @@ export class BatchInferenceEngine {
         const company = results.top_risk_companies[i];
         console.log(
           `    ${i + 1}. ${company.ticker} Q${company.quarter}/${company.year}: ` +
-          `${(company.risk_score * 100).toFixed(2)}% (${company.risk_level})`
+          `${company.risk_score} points (${company.risk_level})`
         );
       }
     }

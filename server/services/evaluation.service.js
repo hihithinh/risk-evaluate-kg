@@ -4,25 +4,41 @@
  */
 
 import { SingleSymbolInference } from '../../src/core/SingleSymbolInference.js';
+import { LLMService } from './llm.service.js';
 import fs from 'fs';
 import path from 'path';
 
 export class EvaluationService {
   constructor() {
     this.inference = new SingleSymbolInference();
+    this.llmService = new LLMService();
   }
 
   /**
-   * Get indicator rules from JSON file
+   * Get risk signal rules from JSON file (luật suy luận tín hiệu rủi ro)
    */
   async getIndicatorRules() {
     try {
-      const rulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'indicator_rules.json');
+      const rulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'risk_signal_rules.json');
       const rulesContent = fs.readFileSync(rulesPath, 'utf-8');
       return JSON.parse(rulesContent);
     } catch (error) {
-      console.error('❌ Error loading indicator rules:', error);
-      throw new Error('Failed to load indicator rules');
+      console.error('❌ Error loading risk signal rules:', error);
+      throw new Error('Failed to load risk signal rules');
+    }
+  }
+
+  /**
+   * Get risk label rules from JSON file (luật suy luận nhãn rủi ro)
+   */
+  async getCompositeRules() {
+    try {
+      const rulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'risk_label_rules.json');
+      const rulesContent = fs.readFileSync(rulesPath, 'utf-8');
+      return JSON.parse(rulesContent);
+    } catch (error) {
+      console.error('❌ Error loading risk label rules:', error);
+      throw new Error('Failed to load risk label rules');
     }
   }
 
@@ -68,8 +84,6 @@ export class EvaluationService {
    */
   async calculateIndicators(symbol, year, quarter) {
     try {
-      console.log('🔍 Step 2: Getting data from cache...');
-      
       // Get data from SQLite cache
       const { DataCrawler } = await import('../../src/crawler/DataCrawler.js');
       const crawler = new DataCrawler();
@@ -79,18 +93,9 @@ export class EvaluationService {
         throw new Error(`No cached data found for ${symbol} Q${quarter}/${year}`);
       }
       
-      console.log('🔍 Step 2: Using cached data for', Object.keys(rawData).length, 'fields');
-      console.log('🔍 Sample cached data fields:', Object.keys(rawData).slice(0, 10));
-      console.log('🔍 Checking required fields:');
-      console.log('  - Revenue (Bn. VND):', rawData['Revenue (Bn. VND)']);
-      console.log('  - Net Profit For the Year:', rawData['Net Profit For the Year']);
-      console.log('  - TOTAL ASSETS (Bn. VND):', rawData['TOTAL ASSETS (Bn. VND)']);
-      
       // Calculate indicators using calculation engine
       const companyType = this._detectCompanyType(symbol);
       const indicators = await this.calculateBasicIndicators(rawData, companyType);
-      
-      console.log('🔍 Step 2 calculated indicators:', indicators);
       
       return {
         success: true,
@@ -112,8 +117,6 @@ export class EvaluationService {
    */
   async evaluateRisk(symbol, year, quarter) {
     try {
-      console.log('🔍 Step 3: Evaluating risk from existing data...');
-      
       // Get indicators from Step 2 (cache or calculate if needed)
       const { DataCrawler } = await import('../../src/crawler/DataCrawler.js');
       const crawler = new DataCrawler();
@@ -126,18 +129,16 @@ export class EvaluationService {
       // Calculate indicators if not already done
       const companyType = this._detectCompanyType(symbol);
       const indicators = await this.calculateBasicIndicators(rawData, companyType);
-      console.log('🔍 Step 3 using indicators:', indicators.length, 'items');
       
       // Evaluate risk using risk evaluation engine
       const riskAssessment = await this.evaluateRiskFromIndicators(indicators, symbol);
       
       // Run Phase 4 composite inference directly on evaluations
-      console.log('🔍 Running Phase 4 composite inference...');
       let compositeResult;
       try {
         const { CompositeInferer } = await import('../../src/phases/Phase4CompositeInference.js');
         const path = await import('path');
-        const compositeRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'composite_rules.json');
+        const compositeRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'risk_label_rules.json');
         const compositeInferer = new CompositeInferer(compositeRulesPath, true);
         
         // Convert indicators to evaluations format for Phase 4
@@ -152,11 +153,6 @@ export class EvaluationService {
         }
         
         compositeResult = compositeInferer.infer(evaluations);
-        console.log('🔍 Phase 4 completed:', {
-          iterations: compositeResult.inference_stats?.iterations,
-          rules_fired: compositeResult.inference_stats?.rules_fired,
-          composite_risks: compositeResult.composite_risks?.length
-        });
       } catch (error) {
         console.error('❌ Error running composite inference:', error);
         compositeResult = { 
@@ -176,6 +172,9 @@ export class EvaluationService {
         ...phase4Logs
       ];
       
+      // Use core's final score calculation (from ForwardChainer)
+      const finalScore = compositeResult.final_score || {};
+      
       const uiResult = {
         company: {
           symbol,
@@ -184,7 +183,23 @@ export class EvaluationService {
           type: this._detectCompanyType(symbol)
         },
         indicators: indicators,
-        risk_assessment: riskAssessment,
+        risk_assessment: {
+          ...riskAssessment,
+          // Use final score from core inference engine
+          risk_score: finalScore.total_risk_points || riskAssessment.risk_score,
+          risk_level: finalScore.risk_level || riskAssessment.risk_level,
+          // Keep Phase 3 scores for reference
+          phase3_risk_score: finalScore.indicator_risk_points || riskAssessment.risk_score,
+          phase3_risk_level: riskAssessment.risk_level,
+          // Phase 4 composite points
+          composite_risk_points: finalScore.composite_risk_points || 0,
+          // Max points info
+          max_indicator_points: finalScore.max_indicator_points,
+          max_composite_points: finalScore.max_composite_points,
+          max_total_points: finalScore.max_total_points,
+          // Thresholds for UI tooltip
+          thresholds: finalScore.thresholds
+        },
         inference_stats: {
           total_indicators: indicators.length,
           evaluation_time: new Date().toISOString(),
@@ -199,7 +214,42 @@ export class EvaluationService {
         composite_risks: compositeResult.composite_risks || []
       };
       
-      console.log('🔍 Step 3 UI result:', uiResult);
+
+      // Generate LLM explanation
+      try {
+        const llmContext = {
+          company: {
+            symbol,
+            year,
+            quarter
+          },
+          companyType: this._detectCompanyType(symbol),
+          rawData: rawData,
+          indicators: indicators,
+          riskSignals: riskAssessment.risk_factors,
+          riskLabels: compositeResult.composite_risks || [],
+          riskScore: finalScore.total_risk_points || riskAssessment.risk_score,
+          phase3Score: finalScore.indicator_risk_points || riskAssessment.risk_score,
+          phase4Score: finalScore.composite_risk_points || 0,
+          overallRiskLevel: finalScore.risk_level || riskAssessment.risk_level,
+          thresholds: finalScore.thresholds || { good_max: 9, medium_min: 10, medium_max: 19, high_min: 20 },
+          inferenceLogs: combinedInferenceLogs
+        };
+
+        const llmResult = await this.llmService.generateRiskExplanation(llmContext);
+        uiResult.llm_explanation = llmResult;
+        
+        if (llmResult.enabled && !llmResult.error) {
+        } else if (llmResult.error) {
+        } else {
+        }
+      } catch (llmError) {
+        console.error('❌ Error generating LLM explanation:', llmError);
+        uiResult.llm_explanation = {
+          enabled: false,
+          error: llmError.message
+        };
+      }
 
       return {
         success: true,
@@ -263,7 +313,8 @@ export class EvaluationService {
     // Delay 2 tháng: nếu chưa qua tháng thứ 2 của quý tiếp theo thì lùi về quý trước
     // VD: Tháng 4 (Q2) thì báo cáo Q1 mới có
     // Tháng 1-2 → Q4 năm trước
-    // Tháng 3-5 → Q1 năm nay
+    // Tháng 3 → Q4 năm trước (Q1 chưa có)
+    // Tháng 4-5 → Q1 năm nay
     // Tháng 6-8 → Q2 năm nay
     // Tháng 9-11 → Q3 năm nay
     // Tháng 12 → Q3 năm nay (Q4 chưa có)
@@ -272,7 +323,12 @@ export class EvaluationService {
     const monthsSinceQuarterStart = month - quarterStartMonth;
     
     // Nếu chưa qua 2 tháng kể từ đầu quý hiện tại → lùi về quý trước
-    if (monthsSinceQuarterStart < 2) {
+    // Tháng 1,2,3 của Q1 → Q4 năm trước (Q1 chưa có báo cáo)
+    // Tháng 4,5 của Q2 → Q1 năm nay
+    // Tháng 7,8 của Q3 → Q2 năm nay
+    // Tháng 10,11 của Q4 → Q3 năm nay
+    // Tháng 12 của Q4 → Q3 năm nay (Q4 chưa có)
+    if (monthsSinceQuarterStart <= 1 || (quarter === 1 && month === 3)) {
       quarter = quarter - 1;
       if (quarter === 0) {
         quarter = 4;
@@ -288,7 +344,6 @@ export class EvaluationService {
    */
   async calculateBasicIndicators(rawData, companyType = 'BANK') {
     try {
-      console.log('🔍 Using calculation engine for', companyType);
       
       // Import calculation engine
       const { IndicatorCalculatorV2 } = await import('../../src/phases/Phase2IndicatorCalculationV2.js');
@@ -300,29 +355,16 @@ export class EvaluationService {
         ...rawData // Spread all financial data directly
       };
       
-      console.log('🔍 Company data for calculation engine:', {
-        ticker: companyData.ticker,
-        hasLoans: !!companyData['Loans and advances to customers'],
-        hasDeposits: !!companyData['Deposits from customers'],
-        hasNetInterest: !!companyData['Net Interest Income'],
-        totalFields: Object.keys(companyData).length,
-        sampleFields: Object.keys(companyData).slice(0, 10)
-      });
-      
       // Calculate indicators using engine
       const results = calculator.calculateAll(companyData);
       
-      console.log('🔍 Calculation engine results:', results);
       
       // Convert to API format
       const indicators = [];
-      console.log('🔍 Converting results to API format...');
-      console.log('🔍 Results structure:', Object.keys(results));
       
       // Calculation engine returns flat object: { A1: 1.17, A2: 0.008, ... }
       // Not nested structure like { indicators: {...} }
       
-      console.log('🔍 Processing indicator entries:', Object.keys(results));
       
       for (const [code, value] of Object.entries(results)) {
         // Skip non-indicator properties
@@ -330,7 +372,6 @@ export class EvaluationService {
           continue;
         }
         
-        console.log(`🔍 Processing indicator ${code}: value=${value}, type=${typeof value}`);
         if (value !== null && value !== undefined && !isNaN(value)) {
           indicators.push({
             code: code,
@@ -341,13 +382,10 @@ export class EvaluationService {
             calculation_method: await this._getCalculationMethod(code, companyType),
             explanation: await this._getIndicatorExplanation(code, companyType)
           });
-          console.log(`✅ Added indicator ${code}: ${value}`);
         } else {
-          console.log(`⚠️ Skipped indicator ${code} (null/undefined/NaN)`);
         }
       }
       
-      console.log('🔍 Final indicators:', indicators.length, 'calculated');
       return indicators;
       
     } catch (error) {
@@ -363,18 +401,12 @@ export class EvaluationService {
     const bankSymbols = ['ACB', 'BID', 'CTG', 'HDB', 'MBB', 'STB', 'TCB', 'TPB', 'VCB', 'VIB'];
     const securitiesSymbols = ['SSI', 'VND', 'VCI', 'BSI', 'SHS', 'HCM', 'FTS'];
     
-    console.log(`🔍 Detecting company type for symbol: ${symbol}`);
-    console.log(`🔍 Bank symbols list:`, bankSymbols);
-    console.log(`🔍 Is ${symbol} in bank list:`, bankSymbols.includes(symbol));
     
     if (bankSymbols.includes(symbol)) {
-      console.log(`🔍 Detected: ${symbol} is BANK`);
       return 'BANK';
     } else if (securitiesSymbols.includes(symbol)) {
-      console.log(`🔍 Detected: ${symbol} is SECURITIES`);
       return 'SECURITIES';
     } else {
-      console.log(`🔍 Detected: ${symbol} is REGULAR`);
       return 'REGULAR';
     }
   }
@@ -406,8 +438,8 @@ export class EvaluationService {
       const fs = await import('fs');
       const path = await import('path');
       
-      const storageRulesPath = path.join(process.cwd().replace('/server', ''), 'storage', 'app', 'rules', 'calculation_rules.json');
-      const defaultRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'calculation_rules.json');
+      const storageRulesPath = path.join(process.cwd().replace('/server', ''), 'storage', 'app', 'rules', 'indicator_rules.json');
+      const defaultRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'indicator_rules.json');
       
       let rulesPath = storageRulesPath;
       if (!fs.existsSync(storageRulesPath)) {
@@ -415,7 +447,8 @@ export class EvaluationService {
       }
       
       const rulesContent = fs.readFileSync(rulesPath, 'utf-8');
-      const rules = JSON.parse(rulesContent).calculation_rules;
+      const rulesData = JSON.parse(rulesContent);
+      const rules = rulesData.indicator_rules || rulesData.calculation_rules;
       
       // Find rule for this indicator and company type
       const rule = rules.find(r => r.indicator === code && r.company_type === companyType);
@@ -444,8 +477,8 @@ export class EvaluationService {
       const fs = await import('fs');
       const path = await import('path');
       
-      const storageRulesPath = path.join(process.cwd().replace('/server', ''), 'storage', 'app', 'rules', 'calculation_rules.json');
-      const defaultRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'calculation_rules.json');
+      const storageRulesPath = path.join(process.cwd().replace('/server', ''), 'storage', 'app', 'rules', 'indicator_rules.json');
+      const defaultRulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'indicator_rules.json');
       
       let rulesPath = storageRulesPath;
       if (!fs.existsSync(storageRulesPath)) {
@@ -453,7 +486,8 @@ export class EvaluationService {
       }
       
       const rulesContent = fs.readFileSync(rulesPath, 'utf-8');
-      const rules = JSON.parse(rulesContent).calculation_rules;
+      const rulesData = JSON.parse(rulesContent);
+      const rules = rulesData.indicator_rules || rulesData.calculation_rules;
       
       // Find rule for this indicator and company type
       const rule = rules.find(r => r.indicator === code && r.company_type === companyType);
@@ -509,12 +543,11 @@ export class EvaluationService {
    */
   async evaluateRiskFromIndicators(indicators, symbol) {
     try {
-      console.log('🔍 Evaluating risk from', indicators.length, 'indicators for', symbol);
       
       // Import risk evaluation engine
       const { RiskEvaluator } = await import('../../src/phases/Phase3RiskEvaluation.js');
       const path = await import('path');
-      const rulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'indicator_rules.json');
+      const rulesPath = path.join(process.cwd().replace('/server', ''), 'rules', 'risk_signal_rules.json');
       const riskEvaluator = new RiskEvaluator(rulesPath);
       
       // Evaluate each indicator and create Phase 3 inference logs
@@ -563,7 +596,6 @@ export class EvaluationService {
           totalRiskScore += riskResult.risk_point || 0;
           riskLevelCounts[riskResult.risk_level] = (riskLevelCounts[riskResult.risk_level] || 0) + 1;
           
-          console.log(`🔍 ${indicator.code} (${indicator.value}): ${riskResult.risk_level} (${riskResult.risk_point} points)`);
         }
       }
       
@@ -587,13 +619,6 @@ export class EvaluationService {
         evaluation_time: new Date().toISOString(),
         phase3_inference_logs: phase3InferenceLogs
       };
-      
-      console.log('🔍 Risk assessment completed:', {
-        risk_level: overallRiskLevel,
-        risk_score: totalRiskScore,
-        factors_count: riskFactors.length,
-        phase3_logs: phase3InferenceLogs.length
-      });
       
       return riskAssessment;
       

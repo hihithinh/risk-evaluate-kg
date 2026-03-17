@@ -289,13 +289,23 @@ export class StatisticalValidator {
       console.log(`  ${result.latent_variable}: α = ${result.cronbach_alpha} (${result.interpretation})`);
     }
 
-    console.log('✓ Batch Phase 2 completed\n');
-
-    return {
-      descriptive_stats: descriptiveStats,
+    // Generate report before returning (uses full data)
+    const report = this.generateReport({
       cronbach_results: cronbachResults,
       item_analysis: itemAnalysis,
       n_samples: data.length
+    });
+
+    // Return only essential data for frontend
+    return {
+      cronbach_results: cronbachResults,
+      n_samples: data.length,
+      // Store full data internally for report generation if needed
+      _internal: {
+        descriptive_stats: descriptiveStats,
+        item_analysis: itemAnalysis,
+        report: report
+      }
     };
   }
 

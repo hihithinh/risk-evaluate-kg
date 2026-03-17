@@ -32,10 +32,10 @@ async function testKnowledgeAPI() {
     const graph = await graphRes.json();
     console.log('✅ Get knowledge graph:', graph.data.metadata);
     
-    // Test get indicator rules
+    // Test get risk signal rules
     const rulesRes = await fetch(`${BASE_URL}/knowledge/rules/indicator`);
     const rules = await rulesRes.json();
-    console.log('✅ Get indicator rules:', rules.data.isCustom ? 'Custom' : 'Default');
+    console.log('✅ Get risk signal rules:', rules.data.isCustom ? 'Custom' : 'Default');
     
     return true;
   } catch (error) {

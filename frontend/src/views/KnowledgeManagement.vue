@@ -10,42 +10,38 @@
       
       <!-- Rule Type Selector -->
       <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rule Type</label>
-            <select v-model="selectedType" @change="loadRules" class="input-field w-64">
-              <option value="indicator">Indicator Rules</option>
-              <option value="composite">Composite Rules</option>
-              <option value="calculation">Calculation Rules</option>
-            </select>
-          </div>
-          
-          <div class="flex gap-3">
-            <button 
-              @click="saveRules" 
-              :disabled="loading"
-              class="btn-primary"
-            >
-              Save Custom Rules
-            </button>
-            <button 
-              @click="restoreDefault" 
-              :disabled="loading"
-              class="btn-secondary"
-            >
-              Restore Default
-            </button>
-          </div>
-        </div>
-        
-        <div v-if="isCustom" class="text-sm text-yellow-600">
-          ⚠️ Using custom rules
+        <h2 class="text-2xl font-bold mb-4">Select Rule Type</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+              @click="selectedType = 'indicator'"
+              :class="selectedType === 'indicator' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-6 py-4 rounded-lg font-medium hover:opacity-80 transition text-left"
+          >
+            <div class="font-bold text-lg mb-1">Indicator Rules</div>
+            <div class="text-sm opacity-90">Luật tính toán chỉ số - Định nghĩa công thức tính các chỉ số tài chính từ dữ liệu báo cáo (Phase 2)</div>
+          </button>
+          <button
+              @click="selectedType = 'risk_signal'"
+              :class="selectedType === 'risk_signal' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-6 py-4 rounded-lg font-medium hover:opacity-80 transition text-left"
+          >
+            <div class="font-bold text-lg mb-1">Risk Signal Rules</div>
+            <div class="text-sm opacity-90">Luật suy luận tín hiệu rủi ro - Đánh giá rủi ro cho từng chỉ số tài chính (Phase 3)</div>
+          </button>
+          <button
+              @click="selectedType = 'risk_label'"
+              :class="selectedType === 'risk_label' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-6 py-4 rounded-lg font-medium hover:opacity-80 transition text-left"
+          >
+            <div class="font-bold text-lg mb-1">Risk Label Rules</div>
+            <div class="text-sm opacity-90">Luật suy luận nhãn rủi ro - Kết hợp nhiều risk signal thành risk label (Phase 4)</div>
+          </button>
         </div>
       </div>
       
       <!-- JSON Structure Visualization -->
       <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h2 class="text-2xl font-bold mb-4">{{ selectedType.charAt(0).toUpperCase() + selectedType.slice(1) }} Rules Structure</h2>
+        <h2 class="text-2xl font-bold mb-4">Sơ đồ tri thức</h2>
         <div v-if="rules" class="grid grid-cols-3 gap-4">
           <!-- Mindmap Visualization -->
           <div class="col-span-2">
@@ -122,13 +118,34 @@
         </div>
         
         <div v-else-if="rules">
-          <pre 
-            ref="editorContainer"
-            class="w-full h-96 font-mono text-sm p-4 border border-gray-300 rounded bg-gray-50 overflow-auto"
-            contenteditable="true"
-            @input="handleEditorInput"
-            @blur="validateJson"
-          ><code class="language-json">{{ rulesJson }}</code></pre>
+          <div class="mb-4 flex gap-3 items-center">
+            <button @click="saveRules" class="btn-primary" :disabled="!hasChanges">
+              Save Rules
+            </button>
+            <button @click="loadRules" class="btn-secondary">
+              Reload
+            </button>
+            <button @click="resetToOriginal" class="btn-secondary" :disabled="!hasChanges">
+              Reset to Original
+            </button>
+            <span v-if="hasChanges" class="text-sm text-orange-600 font-medium">
+              ⚠️ Unsaved changes
+            </span>
+          </div>
+          
+          <div ref="jsonEditorContainer" class="border rounded-lg overflow-auto" style="max-height: 600px;">
+            <vue-json-pretty
+              v-model:data="editableRules"
+              v-model:selectedValue="selectedPath"
+              :editable="true"
+              :show-line="true"
+              :show-length="true"
+              :deep="5"
+              :highlight-selected-node="true"
+              :selectable-type="'single'"
+              @update:data="handleJsonChange"
+            />
+          </div>
           
           <div v-if="jsonError" class="mt-2 text-red-600 text-sm">
             ⚠️ Invalid JSON: {{ jsonError }}
@@ -140,17 +157,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useKnowledgeStore } from '@/stores/knowledge.store'
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
 
 const store = useKnowledgeStore()
 
 const selectedType = ref('indicator')
-const rulesJson = ref('')
 const jsonError = ref(null)
 const graphContainer = ref(null)
-const editorContainer = ref(null)
 const selectedNode = ref(null)
+const originalRules = ref(null)
+const editableRules = ref(null)
+const hasChanges = ref(false)
+const jsonEditorContainer = ref(null)
+const selectedPath = ref('')
 let network = null
 
 const rules = computed(() => store.rules)
@@ -161,35 +183,25 @@ const knowledgeGraph = computed(() => store.knowledgeGraph)
 onMounted(async () => {
   await store.loadRuleTypes()
   await loadRules()
+  // Ensure mindmap renders on initial load
+  if (rules.value) {
+    renderMindmap(rules.value)
+  }
 })
 
-watch(rules, async (newRules) => {
+watch(rules, (newRules) => {
   if (newRules) {
-    rulesJson.value = JSON.stringify(newRules, null, 2)
     selectedNode.value = null
-    // Auto-render mindmap khi rules thay đổi
-    await nextTick()
+    originalRules.value = JSON.parse(JSON.stringify(newRules))
+    editableRules.value = JSON.parse(JSON.stringify(newRules))
+    hasChanges.value = false
     renderMindmap(newRules)
-    applySyntaxHighlighting()
   }
 })
 
-function applySyntaxHighlighting() {
-  if (!editorContainer.value) return
-  
-  // Simple syntax highlighting
-  const code = editorContainer.value.querySelector('code')
-  if (code) {
-    let html = rulesJson.value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"([^"]+)":/g, '<span style="color: #0066cc;">"$1"</span>:')
-      .replace(/: "([^"]*)"/g, ': <span style="color: #008800;">"$1"</span>')
-      .replace(/: (true|false|null)/g, ': <span style="color: #aa00aa;">$1</span>')
-      .replace(/: (\d+)/g, ': <span style="color: #dd4400;">$1</span>')
-    code.innerHTML = html
-  }
+function handleJsonChange(newData) {
+  editableRules.value = newData
+  checkForChanges()
 }
 
 watch(selectedType, async () => {
@@ -198,7 +210,24 @@ watch(selectedType, async () => {
 })
 
 async function loadRules() {
-  await store.loadRules(selectedType.value)
+  try {
+    await store.loadRules(selectedType.value)
+    // The watch(rules) will handle updating the editor and originalRules
+  } catch (error) {
+    console.error('Error loading rules:', error)
+    alert('Error loading rules: ' + error.message)
+  }
+}
+
+function checkForChanges() {
+  if (!originalRules.value || !editableRules.value) {
+    hasChanges.value = false
+    return
+  }
+  
+  const currentStr = JSON.stringify(editableRules.value)
+  const originalStr = JSON.stringify(originalRules.value)
+  hasChanges.value = currentStr !== originalStr
 }
 
 function renderMindmap(rulesData) {
@@ -214,12 +243,12 @@ function renderMindmap(rulesData) {
   let items = []
   if (Array.isArray(rulesData)) {
     items = rulesData
+  } else if (rulesData.risk_signal_rules) {
+    items = rulesData.risk_signal_rules
+  } else if (rulesData.risk_label_rules) {
+    items = rulesData.risk_label_rules
   } else if (rulesData.indicator_rules) {
     items = rulesData.indicator_rules
-  } else if (rulesData.composite_rules) {
-    items = rulesData.composite_rules
-  } else if (rulesData.calculation_rules) {
-    items = rulesData.calculation_rules
   }
   
   if (items.length === 0) {
@@ -285,13 +314,13 @@ function renderMindmap(rulesData) {
     let label = ''
     let description = ''
     
-    if (selectedType.value === 'indicator') {
+    if (selectedType.value === 'risk_signal') {
       label = item.indicator || `Item ${i+1}`
       description = item.name || item.description || ''
-    } else if (selectedType.value === 'composite') {
+    } else if (selectedType.value === 'risk_label') {
       label = item.composite_risk || item.rule_id || `Rule ${i+1}`
       description = item.description || ''
-    } else if (selectedType.value === 'calculation') {
+    } else if (selectedType.value === 'indicator') {
       label = item.indicator || `Calc ${i+1}`
       description = item.description || ''
     }
@@ -300,7 +329,6 @@ function renderMindmap(rulesData) {
     nodeEl.innerHTML = `
       <div class="bg-blue-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap hover:bg-blue-600">
         ${label}
-        <span class="ml-1 text-xs">▼</span>
       </div>
     `
     
@@ -308,7 +336,8 @@ function renderMindmap(rulesData) {
     nodeEl.addEventListener('click', () => {
       selectedNode.value = {
         label,
-        data: item
+        data: item,
+        fullData: JSON.stringify(item)  // Store full item data for exact matching
       }
     })
     
@@ -322,62 +351,101 @@ function renderMindmap(rulesData) {
   container.appendChild(legend)
 }
 
-function handleEditorInput(event) {
-  rulesJson.value = event.target.textContent
-}
 
-function validateJson() {
-  try {
-    JSON.parse(rulesJson.value)
-    jsonError.value = null
-  } catch (error) {
-    jsonError.value = error.message
-  }
-}
 
 function scrollToRule() {
-  if (!selectedNode.value || !editorContainer.value) return
-  
-  const label = selectedNode.value.label
-  const content = editorContainer.value.textContent
-  
-  // Find the position of this rule in JSON
-  let searchTerm = ''
-  if (selectedType.value === 'indicator') {
-    searchTerm = `"indicator": "${label}"`
-  } else if (selectedType.value === 'composite') {
-    searchTerm = `"rule_id": "${label}"`
+  if (!selectedNode.value) {
+    return
   }
   
-  const index = content.indexOf(searchTerm)
-  if (index !== -1) {
-    // Scroll to position
-    const lines = content.substring(0, index).split('\n')
-    const lineNumber = lines.length
-    const lineHeight = 20
-    editorContainer.value.scrollTop = (lineNumber - 5) * lineHeight
+  // First scroll to the editor section
+  const headings = document.querySelectorAll('h2')
+  let editorSection = null
+  
+  for (const heading of headings) {
+    if (heading.textContent.includes('Rules Editor')) {
+      editorSection = heading.closest('.bg-white.rounded-lg.shadow')
+      break
+    }
+  }
+  
+  if (editorSection) {
+    editorSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  
+  // Use vue-json-pretty's built-in path selection
+  setTimeout(() => {
+    const targetData = selectedNode.value.fullData
     
-    // Highlight briefly
-    editorContainer.value.classList.add('ring-2', 'ring-yellow-400')
-    setTimeout(() => {
-      editorContainer.value.classList.remove('ring-2', 'ring-yellow-400')
-    }, 1000)
+    // Find the index in the data array
+    let foundIndex = -1
+    let arrayKey = ''
+    
+    if (Array.isArray(editableRules.value)) {
+      foundIndex = editableRules.value.findIndex(item => 
+        JSON.stringify(item) === targetData
+      )
+      arrayKey = 'root'
+    } else if (editableRules.value?.indicator_rules) {
+      foundIndex = editableRules.value.indicator_rules.findIndex(item => 
+        JSON.stringify(item) === targetData
+      )
+      arrayKey = 'root.indicator_rules'
+    } else if (editableRules.value?.risk_signal_rules) {
+      foundIndex = editableRules.value.risk_signal_rules.findIndex(item => 
+        JSON.stringify(item) === targetData
+      )
+      arrayKey = 'root.risk_signal_rules'
+    } else if (editableRules.value?.risk_label_rules) {
+      foundIndex = editableRules.value.risk_label_rules.findIndex(item => 
+        JSON.stringify(item) === targetData
+      )
+      arrayKey = 'root.risk_label_rules'
+    }
+    
+    if (foundIndex >= 0) {
+      // Set the path to select the item in vue-json-pretty
+      selectedPath.value = `${arrayKey}[${foundIndex}]`
+      
+      // Wait for vue-json-pretty to render the highlight, then scroll to it
+      setTimeout(() => {
+        const highlightedNode = jsonEditorContainer.value?.querySelector('.is-highlight')
+        if (highlightedNode) {
+          highlightedNode.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          })
+        }
+      }, 200)
+    }
+  }, 300)
+}
+
+function resetToOriginal() {
+  if (!originalRules.value) return
+  
+  if (confirm('Are you sure you want to discard all changes and reset to the original?')) {
+    editableRules.value = JSON.parse(JSON.stringify(originalRules.value))
+    hasChanges.value = false
   }
 }
 
 async function saveRules() {
   try {
-    const content = editorContainer.value ? editorContainer.value.textContent : rulesJson.value
-    const parsed = JSON.parse(content)
-    await store.saveRules(selectedType.value, parsed)
+    await store.saveRules(selectedType.value, editableRules.value)
+    originalRules.value = JSON.parse(JSON.stringify(editableRules.value))
+    hasChanges.value = false
     alert('Rules saved successfully!')
+    jsonError.value = null
   } catch (error) {
-    alert('Failed to save rules: ' + error.message)
+    jsonError.value = error.message
+    alert('Error saving rules: ' + error.message)
   }
 }
 
 async function restoreDefault() {
-  if (confirm('Are you sure you want to restore default rules?')) {
+  if (confirm('Are you sure you want to restore default rules? This will overwrite your custom rules.')) {
     try {
       await store.restoreDefault(selectedType.value)
       alert('Default rules restored!')

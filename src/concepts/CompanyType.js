@@ -59,27 +59,15 @@ export function identifyCompanyType(data) {
     }
   }
 
-  // Debug scores
-  console.log(`🔍 Company Type Detection - Scores:`);
-  console.log(`  - Bank score: ${bankScore}`);
-  console.log(`  - Regular score: ${regularScore}`);
-  console.log(`  - Securities score: ${securitiesScore}`);
-  console.log(`  - Bank fields found:`, bankFields.filter(field => hasField(data, field)));
-  console.log(`  - Regular fields found:`, regularFields.filter(field => hasField(data, field)));
-
   // Quyết định dựa trên score cao nhất
   if (bankScore >= 2) {
-    console.log(`🔍 Detected as BANK (bankScore >= 2)`);
     return CompanyType.BANK;
   } else if (securitiesScore >= 1 && bankScore >= 1) {
-    console.log(`🔍 Detected as SECURITIES (securitiesScore >= 1 && bankScore >= 1)`);
     return CompanyType.SECURITIES;
   } else if (regularScore >= 2) {
-    console.log(`🔍 Detected as REGULAR (regularScore >= 2)`);
     return CompanyType.REGULAR;
   } else {
     // Default: Regular company
-    console.log(`🔍 Default to REGULAR`);
     return CompanyType.REGULAR;
   }
 }

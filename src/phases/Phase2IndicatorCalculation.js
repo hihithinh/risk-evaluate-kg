@@ -12,7 +12,8 @@ export class IndicatorCalculator {
     this.rules = rulesData;
     this.calculationMap = {};
     
-    for (const rule of rulesData.calculation_rules) {
+    const rules = rulesData.indicator_rules || rulesData.calculation_rules;
+    for (const rule of rules) {
       this.calculationMap[rule.indicator] = rule;
     }
   }
@@ -157,7 +158,6 @@ export class IndicatorCalculator {
    * Tính toán tất cả chỉ số cho một công ty
    */
   calculateAll(data) {
-    console.log('\n=== Phase 2: Indicator Calculation ===');
 
     const indicators = {};
 
@@ -166,13 +166,10 @@ export class IndicatorCalculator {
       indicators[indicator] = value;
 
       if (value !== null) {
-        console.log(`✓ ${indicator}: ${value.toFixed(4)}`);
       } else {
-        console.log(`✗ ${indicator}: N/A (missing data)`);
       }
     }
 
-    console.log('✓ Phase 2 completed\n');
     return indicators;
   }
 

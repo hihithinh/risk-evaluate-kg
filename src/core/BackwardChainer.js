@@ -134,7 +134,7 @@ export class BackwardChainer {
 
     const evalResult = evaluations[indicator];
 
-    if (condition.source === 'indicator_rules_output') {
+    if (condition.source === 'risk_signal_rules_output') {
       const field = condition.field || 'risk_level';
       const operator = condition.operator;
       const expectedValue = condition.value;

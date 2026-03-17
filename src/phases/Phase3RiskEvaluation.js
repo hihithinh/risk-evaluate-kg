@@ -12,7 +12,7 @@ export class RiskEvaluator {
     this.rules = rulesData;
     this.indicatorRules = {};
     
-    // indicator_rules.json là array, cần convert thành object
+    // risk_signal_rules.json là array, cần convert thành object
     if (Array.isArray(rulesData)) {
       for (const rule of rulesData) {
         this.indicatorRules[rule.indicator] = rule;
@@ -103,22 +103,13 @@ export class RiskEvaluator {
    * Đánh giá tất cả chỉ số
    */
   evaluateAll(indicators) {
-    console.log('\n=== Phase 3: Risk Evaluation ===');
-
     const evaluations = {};
 
     for (const [indicator, value] of Object.entries(indicators)) {
       const evaluation = this.evaluateIndicator(indicator, value);
       evaluations[indicator] = evaluation;
-
-      if (evaluation && evaluation.risk_level !== 'Unknown') {
-        console.log(`✓ ${indicator}: ${evaluation.risk_level} (${evaluation.risk_point} points)`);
-      } else if (evaluation && evaluation.risk_level === 'Unknown') {
-        console.log(`⚠ ${indicator}: Unknown (no data or out of range)`);
-      }
     }
 
-    console.log('✓ Phase 3 completed\n');
     return evaluations;
   }
 

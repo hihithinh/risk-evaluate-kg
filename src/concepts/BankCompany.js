@@ -40,8 +40,8 @@ export class BankCompany extends Company {
   }
 
   /**
-   * Calculation rules cho ngân hàng
-   * Map về tên chung A1-D3 để dùng chung indicator_rules.json
+   * Indicator rules cho ngân hàng (luật tính toán chỉ số)
+   * Map về tên chung A1-D3 để dùng chung risk_signal_rules.json
    */
   getCalculationRules() {
     return {

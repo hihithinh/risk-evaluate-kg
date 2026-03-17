@@ -79,15 +79,15 @@ export class KnowledgeService {
    * Get all rule types
    */
   async getAllRuleTypes() {
-    return ['indicator', 'composite', 'calculation'];
+    return ['indicator', 'risk_signal', 'risk_label'];
   }
 
   /**
    * Build knowledge graph structure for visualization
    */
   async buildKnowledgeGraph() {
-    const indicatorRules = await this.loadRules('indicator');
-    const compositeRules = await this.loadRules('composite');
+    const indicatorRules = await this.loadRules('risk_signal');
+    const compositeRules = await this.loadRules('risk_label');
 
     // Build nodes and edges
     const nodes = [];
@@ -96,7 +96,7 @@ export class KnowledgeService {
     // Indicator nodes - rules là array trực tiếp
     const indicators = Array.isArray(indicatorRules.rules) 
       ? indicatorRules.rules 
-      : (indicatorRules.rules.indicator_rules || []);
+      : (indicatorRules.rules.risk_signal_rules || []);
       
     for (const rule of indicators) {
       nodes.push({
@@ -110,7 +110,7 @@ export class KnowledgeService {
     // Composite nodes and edges - rules là array trực tiếp
     const composites = Array.isArray(compositeRules.rules)
       ? compositeRules.rules
-      : (compositeRules.rules.composite_rules || []);
+      : (compositeRules.rules.risk_label_rules || []);
       
     for (const rule of composites) {
       const nodeId = rule.composite_risk || rule.rule_id;
@@ -141,8 +141,8 @@ export class KnowledgeService {
       nodes,
       edges,
       metadata: {
-        totalIndicators: nodes.filter(n => n.type === 'indicator').length,
-        totalComposites: nodes.filter(n => n.type === 'composite').length,
+        totalIndicators: nodes.filter(n => n.type === 'risk_signal').length,
+        totalComposites: nodes.filter(n => n.type === 'risk_label').length,
         totalEdges: edges.length
       }
     };

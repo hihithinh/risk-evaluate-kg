@@ -69,7 +69,7 @@ class IndicatorCalculator:
             return np.nan
         
         rule = self.calculation_map[indicator]
-        calc = rule['calculation']
+        calc = rule['indicator']
         
         if calc['operation'] == 'divide':
             numerator_info = calc['numerator']

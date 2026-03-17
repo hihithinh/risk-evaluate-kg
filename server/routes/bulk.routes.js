@@ -39,4 +39,16 @@ router.post('/evaluate', (req, res, next) => controller.evaluate(req, res, next)
 // Download result
 router.get('/download/:uid/:filename', (req, res, next) => controller.downloadResult(req, res, next));
 
+// Get companies
+router.get('/companies/:uid', (req, res, next) => controller.getCompanies(req, res, next));
+
+// Get financial indicators
+router.get('/indicators/:uid/:companyId', (req, res, next) => controller.getIndicators(req, res, next));
+
+// Get rule results
+router.get('/rules/:uid/:companyId', (req, res, next) => controller.getRuleResults(req, res, next));
+
+// Get statistics
+router.get('/stats/:uid', (req, res, next) => controller.getStatistics(req, res, next));
+
 export default router;

@@ -40,7 +40,7 @@ export class RegularCompany extends Company {
   }
 
   /**
-   * Calculation rules cho công ty thường
+   * Indicator rules (luật tính toán chỉ số) cho công ty thường
    */
   getCalculationRules() {
     return {

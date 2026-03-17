@@ -29,7 +29,6 @@ export class DataStandardizer {
           data.push(row);
         })
         .on('end', () => {
-          console.log(`✓ Loaded raw data: ${data.length} rows`);
           resolve(data);
         })
         .on('error', (error) => {
@@ -46,7 +45,6 @@ export class DataStandardizer {
     
     for (const reportType of this.reportTypes) {
       reports[reportType] = data.filter(row => row.report === reportType);
-      console.log(`✓ ${reportType}: ${reports[reportType].length} rows`);
     }
     
     return reports;
@@ -78,7 +76,6 @@ export class DataStandardizer {
       });
 
       const removed = allKeys.length - nonEmptyKeys.length;
-      console.log(`✓ ${reportType}: Removed ${removed} empty columns`);
     }
     
     return cleaned;
@@ -93,7 +90,6 @@ export class DataStandardizer {
     const cash = reports['cash_flow'] || [];
 
     if (balance.length === 0) {
-      console.log('⚠ Warning: No balance sheet data');
       return [];
     }
 
@@ -119,7 +115,6 @@ export class DataStandardizer {
       return mergedRow;
     });
 
-    console.log(`✓ Merged data: ${merged.length} rows`);
     return merged;
   }
 
@@ -142,7 +137,6 @@ export class DataStandardizer {
             }).length;
 
             if (negativeCount > 0) {
-              console.log(`⚠ Warning: ${negativeCount} negative values in ${col}`);
             }
           }
         }
@@ -156,7 +150,6 @@ export class DataStandardizer {
             }).length;
 
             if (negativeCount > 0) {
-              console.log(`⚠ Warning: ${negativeCount} negative values in ${col}`);
             }
           }
         }
@@ -180,12 +173,10 @@ export class DataStandardizer {
         }).length;
 
         if (violations > 0) {
-          console.log(`⚠ Warning: ${violations} rows violate balance equation`);
         }
       }
     }
 
-    console.log('✓ Data validation completed');
     return data;
   }
 
@@ -193,7 +184,6 @@ export class DataStandardizer {
    * Chạy toàn bộ pipeline Phase 1
    */
   async standardize(rawDataPath) {
-    console.log('\n=== Phase 1: Data Standardization ===');
 
     const rawData = await this.loadRawData(rawDataPath);
     const reports = this.splitByReportType(rawData);
@@ -201,7 +191,6 @@ export class DataStandardizer {
     const merged = this.mergeReports(cleaned);
     const validated = this.validateData(merged);
 
-    console.log('✓ Phase 1 completed\n');
     return validated;
   }
 

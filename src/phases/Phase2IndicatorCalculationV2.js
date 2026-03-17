@@ -1,6 +1,6 @@
 /**
  * Phase 2: Indicator Calculation V2
- * Sử dụng Company concept và calculation_rules.json
+ * Sử dụng Company concept và indicator_rules.json (luật tính toán chỉ số)
  * Áp dụng OOP và Polymorphism
  */
 
@@ -14,13 +14,13 @@ const __dirname = path.dirname(__filename);
 
 export class IndicatorCalculatorV2 {
   constructor(rulesPath = null) {
-    // Load calculation rules từ JSON
+    // Load indicator rules từ JSON (luật tính toán chỉ số)
     if (!rulesPath) {
-      rulesPath = path.join(__dirname, '..', '..', 'rules', 'calculation_rules.json');
+      rulesPath = path.join(__dirname, '..', '..', 'rules', 'indicator_rules.json');
     }
     
     const rulesData = JSON.parse(fs.readFileSync(rulesPath, 'utf-8'));
-    this.allRules = rulesData.calculation_rules;
+    this.allRules = rulesData.indicator_rules || rulesData.calculation_rules;
     
     // Index rules by indicator and company_type
     this.rulesByType = {
@@ -139,12 +139,10 @@ export class IndicatorCalculatorV2 {
    * Tính tất cả indicators cho một company
    */
   calculateAll(companyData) {
-    console.log('\n=== Phase 2: Indicator Calculation ===');
 
     // Tạo Company object từ data
     const company = CompanyFactory.createCompany(companyData);
     
-    console.log(`Company Type: ${company.companyType} (${company.ticker})`);
 
     // Lấy danh sách indicators áp dụng
     const applicableIndicators = company.getApplicableIndicators();
@@ -157,13 +155,10 @@ export class IndicatorCalculatorV2 {
       results[indicator] = value;
 
       if (value !== null) {
-        console.log(`✓ ${indicator}: ${value.toFixed(4)}`);
       } else {
-        console.log(`✗ ${indicator}: N/A (missing data)`);
       }
     }
 
-    console.log('✓ Phase 2 completed\n');
     return results;
   }
 
