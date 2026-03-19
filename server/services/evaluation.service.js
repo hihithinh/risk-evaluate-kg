@@ -232,7 +232,7 @@ export class EvaluationService {
           phase3Score: finalScore.indicator_risk_points || riskAssessment.risk_score,
           phase4Score: finalScore.composite_risk_points || 0,
           overallRiskLevel: finalScore.risk_level || riskAssessment.risk_level,
-          thresholds: finalScore.thresholds || { good_max: 9, medium_min: 10, medium_max: 19, high_min: 20 },
+          thresholds: finalScore.thresholds || { good_max: 9, medium_min: 10, medium_max: 19, risky_min: 20 },
           inferenceLogs: combinedInferenceLogs
         };
 
@@ -554,7 +554,7 @@ export class EvaluationService {
       const riskFactors = [];
       const phase3InferenceLogs = [];
       let totalRiskScore = 0;
-      let riskLevelCounts = { Good: 0, Medium: 0, High: 0 };
+      let riskLevelCounts = { Good: 0, Medium: 0, Risky: 0 };
       
       for (const indicator of indicators) {
         const value = parseFloat(indicator.value);
@@ -601,9 +601,9 @@ export class EvaluationService {
       
       // Determine overall risk level
       let overallRiskLevel = 'Good';
-      if (riskLevelCounts.High >= 3 || totalRiskScore >= 6) {
-        overallRiskLevel = 'High';
-      } else if (riskLevelCounts.High >= 1 || riskLevelCounts.Medium >= 4 || totalRiskScore >= 3) {
+      if (riskLevelCounts.Risky >= 3 || totalRiskScore >= 6) {
+        overallRiskLevel = 'Risky';
+      } else if (riskLevelCounts.Risky >= 1 || riskLevelCounts.Medium >= 4 || totalRiskScore >= 3) {
         overallRiskLevel = 'Medium';
       }
       
@@ -634,12 +634,12 @@ export class EvaluationService {
   _generateRecommendations(riskFactors, overallRiskLevel) {
     const recommendations = [];
     
-    if (overallRiskLevel === 'High') {
+    if (overallRiskLevel === 'Risky') {
       recommendations.push('Cần xem xét lại toàn bộ cấu trúc tài chính và hoạt động kinh doanh');
     }
     
-    if (overallRiskLevel === 'Medium' || overallRiskLevel === 'High') {
-      const highRiskFactors = riskFactors.filter(f => f.risk_level === 'High');
+    if (overallRiskLevel === 'Medium' || overallRiskLevel === 'Risky') {
+      const highRiskFactors = riskFactors.filter(f => f.risk_level === 'Risky');
       if (highRiskFactors.length > 0) {
         recommendations.push(`Cần chú ý các chỉ số rủi ro cao: ${highRiskFactors.map(f => f.name).join(', ')}`);
       }

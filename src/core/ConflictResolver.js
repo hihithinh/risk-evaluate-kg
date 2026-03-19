@@ -86,7 +86,7 @@ export class ConflictResolver {
    */
   _applyPriority(rules) {
     const severityOrder = {
-      'high': 3,
+      'risky': 3,
       'medium': 2,
       'low': 1
     };

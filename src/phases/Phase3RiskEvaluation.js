@@ -119,16 +119,16 @@ export class RiskEvaluator {
   getSummary(evaluations) {
     const summary = {
       total_indicators: 0,
-      high_risk_count: 0,
+      risky_risk_count: 0,
       medium_risk_count: 0,
       good_count: 0,
       total_risk_points: 0,
-      high_risk_indicators: [],
+      risky_risk_indicators: [],
       by_category: {
-        liquidity: { high: 0, medium: 0, good: 0 },
-        leverage: { high: 0, medium: 0, good: 0 },
-        efficiency: { high: 0, medium: 0, good: 0 },
-        profitability: { high: 0, medium: 0, good: 0 }
+        liquidity: { risky: 0, medium: 0, good: 0 },
+        leverage: { risky: 0, medium: 0, good: 0 },
+        efficiency: { risky: 0, medium: 0, good: 0 },
+        profitability: { risky: 0, medium: 0, good: 0 }
       }
     };
 
@@ -139,9 +139,9 @@ export class RiskEvaluator {
       summary.total_risk_points += evaluation.risk_point || 0;
 
       const riskLevel = evaluation.risk_level;
-      if (riskLevel === 'High') {
-        summary.high_risk_count++;
-        summary.high_risk_indicators.push(indicator);
+      if (riskLevel === 'Risky') {
+        summary.risky_risk_count++;
+        summary.risky_risk_indicators.push(indicator);
       } else if (riskLevel === 'Medium') {
         summary.medium_risk_count++;
       } else if (riskLevel === 'Good') {
@@ -151,8 +151,8 @@ export class RiskEvaluator {
       // Categorize by type
       const category = this._getCategory(indicator);
       if (category && summary.by_category[category]) {
-        if (riskLevel === 'High') {
-          summary.by_category[category].high++;
+        if (riskLevel === 'Risky') {
+          summary.by_category[category].risky++;
         } else if (riskLevel === 'Medium') {
           summary.by_category[category].medium++;
         } else if (riskLevel === 'Good') {
@@ -182,7 +182,7 @@ export class RiskEvaluator {
     const highRisk = [];
 
     for (const [indicator, evaluation] of Object.entries(evaluations)) {
-      if (evaluation && evaluation.risk_level === 'High') {
+      if (evaluation && evaluation.risk_level === 'Risky') {
         highRisk.push({
           indicator: indicator,
           value: evaluation.value,

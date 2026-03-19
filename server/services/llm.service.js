@@ -183,7 +183,7 @@ Cấu trúc trả lời:
       prompt += `\n# RỦI RO PHỨC HỢP ĐƯỢC PHÁT HIỆN\n`;
       for (const risk of riskLabels) {
         prompt += `\n## ${risk.description}\n`;
-        prompt += `- Mức độ: ${risk.severity === 'high' ? 'Nghiêm trọng' : risk.severity === 'medium' ? 'Trung bình' : 'Thấp'}\n`;
+        prompt += `- Mức độ: ${risk.severity === 'risky' ? 'Nghiêm trọng' : risk.severity === 'medium' ? 'Trung bình' : 'Thấp'}\n`;
         prompt += `- Loại rủi ro: ${risk.risk_type}\n`;
         prompt += `- Điểm rủi ro: +${risk.risk_point}\n`;
         prompt += `- Chi tiết: ${risk.explanation}\n`;
@@ -204,12 +204,12 @@ Cấu trúc trả lời:
       prompt += `\n## Ngưỡng phân loại rủi ro\n`;
       prompt += `- **Good (Tốt)**: < ${thresholds.medium_min} điểm - Doanh nghiệp có tình hình tài chính ổn định\n`;
       prompt += `- **Medium (Trung bình)**: ${thresholds.medium_min}-${thresholds.medium_max} điểm - Có một số rủi ro cần theo dõi\n`;
-      prompt += `- **High (Cao)**: ≥ ${thresholds.high_min} điểm - Có nhiều rủi ro nghiêm trọng, cần thận trọng\n`;
-      prompt += `\n**Giải thích**: Với ${riskScore} điểm, doanh nghiệp được xếp vào mức "${overallRiskLevel}" vì điểm rủi ro ${riskScore >= thresholds.high_min ? `≥ ${thresholds.high_min}` : riskScore >= thresholds.medium_min ? `nằm trong khoảng ${thresholds.medium_min}-${thresholds.medium_max}` : `< ${thresholds.medium_min}`}.\n`;
+      prompt += `- **Risky (Cao)**: ≥ ${thresholds.risky_min} điểm - Có nhiều rủi ro nghiêm trọng, cần thận trọng\n`;
+      prompt += `\n**Giải thích**: Với ${riskScore} điểm, doanh nghiệp được xếp vào mức "${overallRiskLevel}" vì điểm rủi ro ${riskScore >= thresholds.risky_min ? `≥ ${thresholds.risky_min}` : riskScore >= thresholds.medium_min ? `nằm trong khoảng ${thresholds.medium_min}-${thresholds.medium_max}` : `< ${thresholds.medium_min}`}.\n`;
     }
     
     if (riskSignals) {
-      const highRisks = riskSignals.filter(s => s.risk_level === 'High').length;
+      const highRisks = riskSignals.filter(s => s.risk_level === 'Risky').length;
       const mediumRisks = riskSignals.filter(s => s.risk_level === 'Medium').length;
       const goodRisks = riskSignals.filter(s => s.risk_level === 'Good').length;
       prompt += `\n- Phân bố tín hiệu: ${highRisks} chỉ số rủi ro cao, ${mediumRisks} chỉ số rủi ro trung bình, ${goodRisks} chỉ số tốt\n`;

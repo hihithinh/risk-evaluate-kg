@@ -255,7 +255,7 @@ export class ForwardChainer {
    * Ngưỡng phân loại (điểm thô):
    * - Good: < 10 điểm
    * - Medium: 10-20 điểm
-   * - High: ≥ 20 điểm
+   * - Risky: ≥ 20 điểm
    */
   _calculateFinalScore(evaluations, compositeRisks) {
     // Phase 3: Tính điểm từ indicator evaluations
@@ -276,17 +276,17 @@ export class ForwardChainer {
     // Xác định risk level dựa trên điểm thô
     let riskLevel;
     if (totalPoints >= 20) {
-      riskLevel = 'High';
+      riskLevel = 'Risky';
     } else if (totalPoints >= 10) {
       riskLevel = 'Medium';
     } else {
       riskLevel = 'Good';
     }
 
-    // Đếm số indicators có risk level High
+    // Đếm số indicators có risk level Risky
     const highRiskIndicators = [];
     for (const [ind, evalResult] of Object.entries(evaluations)) {
-      if (evalResult.risk_level === 'High') {
+      if (evalResult.risk_level === 'Risky') {
         highRiskIndicators.push(ind);
       }
     }
@@ -312,7 +312,7 @@ export class ForwardChainer {
         good_max: 9,
         medium_min: 10,
         medium_max: 19,
-        high_min: 20
+        risky_min: 20
       }
     };
   }

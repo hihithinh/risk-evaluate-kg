@@ -143,7 +143,7 @@
           <h2 class="text-2xl font-bold mb-4">Phân bổ Rủi ro</h2>
           <div class="grid grid-cols-3 gap-4">
             <div class="text-center">
-              <div class="text-2xl font-bold text-red-600">{{ result.risk_inference?.summary?.risk_distribution?.High || 0 }}</div>
+              <div class="text-2xl font-bold text-red-600">{{ result.risk_inference?.summary?.risk_distribution?.Risky || 0 }}</div>
               <div class="text-sm text-gray-600">Rủi ro Cao</div>
             </div>
             <div class="text-center">
@@ -293,7 +293,7 @@
                 <option value="Low">Thấp</option>
                 <option value="Medium">Trung bình</option>
                 <option value="Good">Tốt</option>
-                <option value="High">Cao</option>
+                <option value="Risky">Cao</option>
               </select>
               <select 
                 v-model="sortBy" 
@@ -694,7 +694,7 @@ function reset() {
 
 function getRiskBadgeClass(level) {
   const classes = {
-    'High': 'bg-red-100 text-red-800',
+    'Risky': 'bg-red-100 text-red-800',
     'Medium': 'bg-yellow-100 text-yellow-800',
     'Good': 'bg-green-100 text-green-800'
   }

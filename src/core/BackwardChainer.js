@@ -206,8 +206,8 @@ export class BackwardChainer {
   /**
    * Trả lời câu hỏi: "Tại sao công ty này có rủi ro cao?"
    */
-  queryWhyHighRisk(evaluations) {
-    const goal = { severity: 'high' };
+  queryWhyRiskyRisk(evaluations) {
+    const goal = { severity: 'risky' };
 
     this.visitedGoals.clear();
     this.proofTrace = [];

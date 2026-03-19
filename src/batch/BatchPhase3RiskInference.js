@@ -127,7 +127,7 @@ export class BatchRiskInferer {
 
     // Risk level distribution
     const riskDistribution = {
-      High: 0,
+      Risky: 0,
       Medium: 0,
       Good: 0,
       Unknown: 0
@@ -148,7 +148,7 @@ export class BatchRiskInferer {
       risk_distribution: riskDistribution,
       average_risk_score: totalRiskScore / successResults.length, // Return number, not string
       high_risk_companies: successResults
-        .filter(r => r.final_score?.risk_level === 'High')
+        .filter(r => r.final_score?.risk_level === 'Risky')
         .map(r => ({ ticker: r.ticker, year: r.year, quarter: r.quarter }))
     };
   }

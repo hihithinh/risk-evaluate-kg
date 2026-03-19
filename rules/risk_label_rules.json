@@ -1,104 +1,104 @@
 [
   {
     "rule_id": "R1",
-    "description": "High leverage and low profitability",
+    "description": "Risky leverage and low profitability",
     "conditions": [
       {
         "indicator": "B1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "D3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "financial_distress",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 3,
       "explanation": "Tỷ lệ nợ cao kết hợp với khả năng sinh lợi thấp cho thấy doanh nghiệp có nguy cơ gặp khó khăn tài chính nghiêm trọng."
     }
   },
   {
     "rule_id": "R2",
-    "description": "Poor liquidity and high leverage",
+    "description": "Poor liquidity and risky leverage",
     "conditions": [
       {
         "indicator": "A1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "B1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "solvency_risk",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 3,
       "explanation": "Khả năng thanh khoản kém kết hợp với tỷ lệ nợ cao cho thấy doanh nghiệp có nguy cơ mất khả năng thanh toán."
     }
   },
   {
     "rule_id": "R3",
-    "description": "Low cash and high debt to equity",
+    "description": "Low cash and risky debt to equity",
     "conditions": [
       {
         "indicator": "A3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "B2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "liquidity_crisis",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 3,
       "explanation": "Tiền mặt thấp kết hợp với tỷ lệ nợ trên vốn chủ sở hữu cao cho thấy doanh nghiệp có nguy cơ khủng hoảng thanh khoản."
     }
   },
   {
     "rule_id": "R4",
-    "description": "Poor interest coverage and high leverage",
+    "description": "Poor interest coverage and risky leverage",
     "conditions": [
       {
         "indicator": "B3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "in",
-        "value": ["Medium", "High"]
+        "value": ["Medium", "Risky"]
       },
       {
         "indicator": "B1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "in",
-        "value": ["Medium", "High"]
+        "value": ["Medium", "Risky"]
       }
     ],
     "result": {
       "risk_type": "debt_servicing_risk",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 3,
       "explanation": "Khả năng trả lãi vay kém kết hợp với tỷ lệ nợ cao cho thấy doanh nghiệp gặp khó khăn trong việc phục vụ nợ."
     }
@@ -112,14 +112,14 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "D1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
@@ -131,21 +131,21 @@
   },
   {
     "rule_id": "R6",
-    "description": "High receivables and low cash",
+    "description": "Risky receivables and low cash",
     "conditions": [
       {
         "indicator": "C2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "A3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
@@ -164,14 +164,14 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "D2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
@@ -190,26 +190,26 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "A2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "A3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "severe_liquidity_risk",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 4,
       "explanation": "Tất cả các chỉ số thanh khoản đều ở mức thấp cho thấy doanh nghiệp đang đối mặt với rủi ro thanh khoản nghiêm trọng."
     }
@@ -223,26 +223,26 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "D2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "D3",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "severe_profitability_risk",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 4,
       "explanation": "Tất cả các chỉ số sinh lợi đều ở mức thấp cho thấy doanh nghiệp đang gặp khó khăn nghiêm trọng về khả năng tạo lợi nhuận."
     }
@@ -263,7 +263,7 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
@@ -301,21 +301,21 @@
   },
   {
     "rule_id": "R12",
-    "description": "Low inventory turnover and high receivables",
+    "description": "Low inventory turnover and risky receivables",
     "conditions": [
       {
         "indicator": "C1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "C2",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
@@ -334,19 +334,19 @@
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       },
       {
         "indicator": "B1",
         "source": "risk_signal_rules_output",
         "field": "risk_level",
         "operator": "eq",
-        "value": "High"
+        "value": "Risky"
       }
     ],
     "result": {
       "risk_type": "financial_distress",
-      "severity": "high",
+      "severity": "risky",
       "risk_point": 3,
       "explanation": "Thanh khoản yếu kết hợp với đòn bẩy tài chính cao cho thấy doanh nghiệp có nguy cơ gặp khó khăn tài chính."
     }

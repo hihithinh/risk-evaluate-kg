@@ -22,7 +22,7 @@ const mockEvaluations = {
   },
   'A2': {
     value: 0.8,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'liquidity_risk',
     explanation: 'Tỷ lệ thanh toán nhanh thấp, có nguy cơ thanh khoản'
@@ -36,14 +36,14 @@ const mockEvaluations = {
   },
   'B1': {
     value: 0.75,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'leverage_risk',
     explanation: 'Tỷ lệ nợ trên tổng tài sản cao, rủi ro đòn bẩy'
   },
   'B2': {
     value: 2.5,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'leverage_risk',
     explanation: 'Tỷ lệ nợ trên vốn chủ sở hữu cao'
@@ -78,21 +78,21 @@ const mockEvaluations = {
   },
   'D1': {
     value: 0.03,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'profitability_risk',
     explanation: 'Tỷ suất lợi nhuận gộp thấp'
   },
   'D2': {
     value: 0.02,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'profitability_risk',
     explanation: 'Tỷ suất lợi nhuận hoạt động thấp'
   },
   'D3': {
     value: 0.01,
-    risk_level: 'High',
+    risk_level: 'Risky',
     risk_point: 2,
     risk_type: 'profitability_risk',
     explanation: 'ROE thấp, khả năng sinh lời kém'
@@ -181,12 +181,12 @@ function demoBackwardChaining() {
     console.log('\nQuery 1: Tại sao công ty này có rủi ro cao?');
     console.log('-'.repeat(80));
     
-    const whyHighRisk = backwardChainer.queryWhyHighRisk(mockEvaluations);
+    const whyRiskyRisk = backwardChainer.queryWhyRiskyRisk(mockEvaluations);
     
-    if (whyHighRisk.success) {
+    if (whyRiskyRisk.success) {
       console.log('✓ Tìm thấy bằng chứng!');
-      console.log(`\nRules sử dụng: ${whyHighRisk.rules_used.join(', ')}`);
-      console.log(`\n${whyHighRisk.explanation}`);
+      console.log(`\nRules sử dụng: ${whyRiskyRisk.rules_used.join(', ')}`);
+      console.log(`\n${whyRiskyRisk.explanation}`);
     } else {
       console.log('✗ Không tìm thấy bằng chứng cho rủi ro cao');
     }

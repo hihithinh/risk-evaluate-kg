@@ -23,7 +23,7 @@
       {
         "min": null,
         "max": 1.0,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "liquidity_risk",
         "explanation": "Current ratio thấp cho thấy doanh nghiệp có nguy cơ gặp khó khăn thanh khoản."
@@ -54,7 +54,7 @@
       {
         "min": null,
         "max": 0.8,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "liquidity_risk",
         "explanation": "Quick ratio thấp cho thấy doanh nghiệp có nguy cơ khó khăn trong thanh toán nhanh."
@@ -85,7 +85,7 @@
       {
         "min": null,
         "max": 0.2,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "liquidity_risk",
         "explanation": "Cash ratio thấp cho thấy doanh nghiệp thiếu tiền mặt để thanh toán nợ ngắn hạn."
@@ -116,7 +116,7 @@
       {
         "min": 0.7,
         "max": null,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "leverage_risk",
         "explanation": "Debt ratio cao cho thấy doanh nghiệp phụ thuộc nhiều vào nợ vay, có rủi ro tài chính cao."
@@ -147,7 +147,7 @@
       {
         "min": 2.0,
         "max": null,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "leverage_risk",
         "explanation": "Debt to equity ratio cao cho thấy doanh nghiệp phụ thuộc quá nhiều vào vốn vay so với vốn chủ sở hữu."
@@ -178,7 +178,7 @@
       {
         "min": null,
         "max": 1.5,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "leverage_risk",
         "explanation": "Interest coverage ratio thấp cho thấy doanh nghiệp gặp khó khăn trong việc trả lãi vay."
@@ -209,7 +209,7 @@
       {
         "min": null,
         "max": 3.0,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "efficiency_risk",
         "explanation": "Inventory turnover thấp cho thấy hàng tồn kho quay vòng chậm, có nguy cơ ứ đọng."
@@ -240,7 +240,7 @@
       {
         "min": 0.25,
         "max": null,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "efficiency_risk",
         "explanation": "Receivable ratio cao cho thấy doanh nghiệp gặp khó khăn trong thu hồi công nợ."
@@ -271,7 +271,7 @@
       {
         "min": null,
         "max": 1.0,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "efficiency_risk",
         "explanation": "Fixed asset turnover thấp cho thấy tài sản cố định chưa được tận dụng hiệu quả."
@@ -302,7 +302,7 @@
       {
         "min": null,
         "max": 0.05,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "profitability_risk",
         "explanation": "ROS thấp cho thấy doanh nghiệp có tỷ suất lợi nhuận kém, cần xem xét lại chiến lược kinh doanh."
@@ -333,7 +333,7 @@
       {
         "min": null,
         "max": 0.08,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "profitability_risk",
         "explanation": "Basic earning power thấp cho thấy doanh nghiệp không tạo ra lợi nhuận hiệu quả từ tài sản."
@@ -364,7 +364,7 @@
       {
         "min": null,
         "max": 0.05,
-        "risk_level": "High",
+        "risk_level": "Risky",
         "risk_point": 2,
         "risk_type": "profitability_risk",
         "explanation": "ROA thấp cho thấy doanh nghiệp có hiệu quả sinh lợi kém."

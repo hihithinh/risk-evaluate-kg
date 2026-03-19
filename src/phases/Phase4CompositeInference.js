@@ -54,7 +54,7 @@ export class CompositeInferer {
     const queries = {};
 
     // Query 1: Tại sao có rủi ro cao?
-    queries.why_high_risk = this.backwardChainer.queryWhyHighRisk(evaluations);
+    queries.why_risky_risk = this.backwardChainer.queryWhyRiskyRisk(evaluations);
 
     // Query 2: Có rủi ro financial_distress không?
     queries.financial_distress_query = this.backwardChainer.querySpecificRisk(
@@ -80,7 +80,7 @@ export class CompositeInferer {
 
     // Simple pattern matching - check all rules once
     for (const [indicator, evaluation] of Object.entries(evaluations)) {
-      if (evaluation && evaluation.risk_level === 'High') {
+      if (evaluation && evaluation.risk_level === 'Risky') {
         totalPoints += evaluation.risk_point || 0;
       }
     }
@@ -90,7 +90,7 @@ export class CompositeInferer {
 
     let riskLevel;
     if (riskScore >= 0.7) {
-      riskLevel = 'High';
+      riskLevel = 'Risky';
     } else if (riskScore >= 0.4) {
       riskLevel = 'Medium';
     } else {

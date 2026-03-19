@@ -613,7 +613,7 @@
                 <!-- Draw risk labels (Column 3) -->
                 <g v-for="(risk, idx) in result.composite_risks" :key="'label-' + risk.rule_id">
                   <rect :x="620" :y="getNodeY(idx, result.composite_risks.length)" width="160" height="70" rx="8" 
-                        :fill="risk.severity === 'high' ? '#dc2626' : '#f59e0b'" 
+                        :fill="risk.severity === 'risky' ? '#dc2626' : '#f59e0b'" 
                         stroke="#991b1b" stroke-width="2"/>
                   <text :x="700" :y="getNodeY(idx, result.composite_risks.length) + 25" text-anchor="middle" class="text-sm font-bold fill-white">
                     {{ risk.risk_type }}
@@ -647,7 +647,7 @@
                 v-for="(risk, index) in result.composite_risks"
                 :key="risk.rule_id"
                 class="border-l-4 rounded-lg p-4"
-                :class="risk.severity === 'high' ? 'border-red-500 bg-red-50' : risk.severity === 'medium' ? 'border-yellow-500 bg-yellow-50' : 'border-blue-500 bg-blue-50'"
+                :class="risk.severity === 'risky' ? 'border-red-500 bg-red-50' : risk.severity === 'medium' ? 'border-yellow-500 bg-yellow-50' : 'border-blue-500 bg-blue-50'"
             >
               <div class="flex items-start justify-between mb-2">
                 <div class="flex-1">
@@ -655,10 +655,10 @@
                     <span class="font-bold text-lg">{{ risk.description }}</span>
                     <span
                         class="px-2 py-1 rounded text-xs font-semibold"
-                        :class="risk.severity === 'high' ? 'bg-red-600 text-white' : risk.severity === 'medium' ? 'bg-yellow-600 text-white' : 'bg-blue-600 text-white'"
+                        :class="risk.severity === 'risky' ? 'bg-red-600 text-white' : risk.severity === 'medium' ? 'bg-yellow-600 text-white' : 'bg-blue-600 text-white'"
                     >
                       {{
-                        risk.severity === 'high' ? 'Nghiêm trọng' : risk.severity === 'medium' ? 'Trung bình' : 'Thấp'
+                        risk.severity === 'risky' ? 'Nghiêm trọng' : risk.severity === 'medium' ? 'Trung bình' : 'Thấp'
                       }}
                     </span>
                     <span class="px-2 py-1 rounded text-xs bg-gray-200 text-gray-700">
@@ -711,7 +711,7 @@
             </div>
             <div>
               <p class="text-sm text-gray-600 mb-1">Điểm rủi ro tổng</p>
-              <p class="text-3xl font-bold text-gray-900">{{ result.risk_assessment.risk_score }}</p>
+              <p class="text-3xl font-bold text-gray-900">{{ result.risk_assessment.risk_score }} / 76</p>
               <p class="text-xs text-gray-500 mt-1">
                 Từ tín hiệu rủi ro: {{ result.risk_assessment.phase3_risk_score || 0 }}
                 <span v-if="result.risk_assessment.composite_risk_points > 0">
@@ -853,7 +853,7 @@
                     <div v-if="step.phase === 3 && step.outputData" class="bg-white p-2 rounded border border-gray-300">
                       <div class="flex items-center gap-2">
                         <span class="px-2 py-1 rounded text-xs font-bold"
-                              :class="step.outputData.risk_level === 'High' ? 'bg-red-100 text-red-700' : 
+                              :class="step.outputData.risk_level === 'Risky' ? 'bg-red-100 text-red-700' : 
                                       step.outputData.risk_level === 'Medium' ? 'bg-yellow-100 text-yellow-700' : 
                                       'bg-green-100 text-green-700'">
                           {{ step.outputData.risk_level }}
@@ -969,7 +969,7 @@
         <span class="text-gray-300">10-19 điểm</span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="w-16 px-2 py-1 rounded bg-red-600 text-white font-semibold text-center">High</span>
+        <span class="w-16 px-2 py-1 rounded bg-red-600 text-white font-semibold text-center">Risky</span>
         <span class="text-gray-300">≥ 20 điểm</span>
       </div>
     </div>
@@ -1179,13 +1179,13 @@ function getCompanyTypeDescription(type) {
 }
 
 function getHighRiskFactors() {
-  // Get all High and Medium risk factors from Phase 3
+  // Get all Risky and Medium risk factors from Phase 3
   if (!result.value?.risk_assessment?.risk_factors) {
     return []
   }
   
   return result.value.risk_assessment.risk_factors.filter(
-    f => f.risk_level === 'High' || f.risk_level === 'Medium'
+    f => f.risk_level === 'Risky' || f.risk_level === 'Medium'
   )
 }
 
@@ -1198,7 +1198,7 @@ function getRiskSignals() {
   }
   
   result.value.risk_assessment.risk_factors.forEach(factor => {
-    if (factor.risk_level === 'High' || factor.risk_level === 'Medium') {
+    if (factor.risk_level === 'Risky' || factor.risk_level === 'Medium') {
       const riskType = factor.risk_type || 'unknown_risk'
       
       if (!signals[riskType]) {
@@ -1317,7 +1317,7 @@ function getConditionsForRisk(risk) {
   const rule = compositeRules.value?.find(r => r.rule_id === risk.rule_id)
   
   if (!rule || !rule.conditions) {
-    return [{ indicator: '?', value: 'High' }]
+    return [{ indicator: '?', value: 'Risky' }]
   }
   
   // Extract conditions from the rule
@@ -1353,7 +1353,7 @@ function formatFinancialValue(fieldName, value) {
 
 function getRiskColor(level) {
   const colors = {
-    'High': 'text-red-600',
+    'Risky': 'text-red-600',
     'Medium': 'text-yellow-600',
     'Good': 'text-green-600',
     'Unknown': 'text-gray-600'
@@ -1398,7 +1398,7 @@ function getIndicatorsByGroup(group) {
 
 function getRiskBadgeClass(level) {
   const classes = {
-    'High': 'bg-red-100 text-red-800',
+    'Risky': 'bg-red-100 text-red-800',
     'Medium': 'bg-yellow-100 text-yellow-800',
     'Good': 'bg-green-100 text-green-800',
     'Unknown': 'bg-gray-100 text-gray-800'
